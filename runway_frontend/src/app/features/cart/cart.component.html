@@ -1,0 +1,132 @@
+<div class="cart-page">
+
+  <div class="cart-header">
+    <div>
+      <span class="eyebrow">Shopping</span>
+      <h1 class="cart-title">Your Cart</h1>
+    </div>
+    @if (!loading() && (cart()?.items?.length ?? 0) > 0) {
+      <span class="cart-count">
+        {{ cart()!.totalItems }} item{{ cart()!.totalItems !== 1 ? 's' : '' }}
+      </span>
+    }
+  </div>
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (n of [1,2,3]; track n) {
+        <div class="skeleton-item">
+          <div class="skeleton-img skeleton-pulse"></div>
+          <div class="skeleton-lines">
+            <div class="skeleton-line skeleton-pulse" style="width:55%"></div>
+            <div class="skeleton-line skeleton-pulse" style="width:25%"></div>
+            <div class="skeleton-line skeleton-pulse" style="width:18%"></div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Empty -->
+  @if (isEmpty()) {
+    <div class="empty-state">
+      <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"
+          stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M3 6h18M16 10a4 4 0 01-8 0"
+          stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h2 class="empty-title">Your cart is empty</h2>
+      <p class="empty-sub">Add pieces you love and find them here.</p>
+      <a class="empty-btn" routerLink="/category/all">Explore Collection</a>
+    </div>
+  }
+
+  <!-- Cart content -->
+  @if (!loading() && !error() && (cart()?.items?.length ?? 0) > 0) {
+    <div class="cart-layout">
+
+      <!-- Items -->
+      <div class="cart-items">
+        @for (item of cart()!.items; track item.productId) {
+          <div class="cart-item" [class.removing]="removingIds().has(item.productId)">
+
+            <!-- Product image — fetched from Catalog Service via ProductImageService -->
+            <a [routerLink]="['/product', item.productId]" class="item-img-wrap">
+              <img
+                [src]="getImage(item.productId)"
+                [alt]="item.productTitle"
+                class="item-img"
+                (error)="$any($event.target).src='/placeholder.jpg'"
+              />
+            </a>
+
+            <div class="item-info">
+              <a [routerLink]="['/product', item.productId]" class="item-name">
+                {{ item.productTitle }}
+              </a>
+              <span class="item-price-unit">
+                {{ item.unitPrice | currency:'INR' }} each
+              </span>
+
+              <div class="item-qty-row">
+                <button
+                  class="qty-btn"
+                  (click)="updateQuantity(item.productId, item.quantity - 1)"
+                  aria-label="Decrease quantity">−</button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button
+                  class="qty-btn"
+                  (click)="updateQuantity(item.productId, item.quantity + 1)"
+                  aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+
+            <div class="item-right">
+              <span class="item-total">{{ subtotal(item) | currency:'INR' }}</span>
+              <button
+                class="remove-btn"
+                (click)="remove(item.productId)"
+                [disabled]="removingIds().has(item.productId)"
+                aria-label="Remove item"
+              >Remove</button>
+            </div>
+
+          </div>
+        }
+      </div>
+
+      <!-- Order Summary -->
+      <aside class="cart-summary">
+        <h2 class="summary-title">Order Summary</h2>
+
+        <div class="summary-rows">
+          @for (item of cart()!.items; track item.productId) {
+            <div class="summary-row">
+              <span class="summary-label">
+                {{ item.productTitle }} × {{ item.quantity }}
+              </span>
+              <span class="summary-val">{{ subtotal(item) | currency:'INR' }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total-row">
+          <span>Total</span>
+          <span class="summary-total">{{ cart()!.total | currency:'INR' }}</span>
+        </div>
+
+        <button class="btn-primary checkout-btn" (click)="checkout()">
+          Proceed to Checkout
+        </button>
+
+        <a routerLink="/category/all" class="continue-link">Continue shopping</a>
+      </aside>
+
+    </div>
+  }
+
+</div>

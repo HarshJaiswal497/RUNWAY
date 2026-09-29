@@ -1,0 +1,115 @@
+<!-- ══ WRITE REVIEW TRIGGER ══════════════════════════════ -->
+<button class="btn-write-review" (click)="openModal()">Write a Review</button>
+
+<!-- ══ WRITE REVIEW MODAL ════════════════════════════════ -->
+@if (modalOpen) {
+ <div class="modal-backdrop" (click)="closeModal()" role="dialog" aria-modal="true" aria-label="Write a review">
+
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <!-- Close -->
+      <button class="modal-close" (click)="closeModal()" aria-label="Close modal">&#x2715;</button>
+
+      <!-- ── FORM ── -->
+      @if (!submitted) {
+
+        <div class="modal-inner">
+          <span class="eyebrow">Your Voice</span>
+          <h3 class="modal-title">Share Your Experience</h3>
+          <p class="modal-subtitle">
+            Your review is submitted for editorial approval and published once verified.
+          </p>
+
+          <!-- Star rating selector -->
+          <div class="form-field">
+            <label class="form-label">
+              Your Rating <span class="field-req">*</span>
+            </label>
+            <div class="star-select">
+              @for (n of starRange; track n) {
+                <button type="button"
+                  class="star-opt"
+                  [class.active]="n <= (hoverRating || selectedRating)"
+                  (mouseenter)="hoverRating = n"
+                  (mouseleave)="hoverRating = 0"
+                  (click)="selectedRating = n"
+                  [attr.aria-label]="'Rate ' + n + ' out of 5 stars'">★</button>
+              }
+              @if (selectedRating > 0) {
+                <span class="rating-label">{{ getRatingLabel(selectedRating) }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div class="form-field">
+            <label class="form-label" for="review-title">
+              Review Title <span class="field-req">*</span>
+            </label>
+            <input
+              id="review-title"
+              type="text"
+              class="form-input"
+              [class.input-error]="reviewTitle.trim().length === 0 && reviewBody.trim().length > 0"
+              placeholder="Summarise your experience in a few words"
+              [value]="reviewTitle"
+              (input)="reviewTitle = $any($event.target).value"
+              maxlength="120"
+              autocomplete="off">
+          </div>
+
+          <!-- Body -->
+          <div class="form-field">
+            <label class="form-label" for="review-body">
+              Your Review <span class="field-req">*</span>
+            </label>
+            <textarea
+              id="review-body"
+              class="form-textarea"
+              placeholder="Describe your experience — craftsmanship, fit, quality, and how it made you feel..."
+              [value]="reviewBody"
+              (input)="reviewBody = $any($event.target).value"
+              rows="5"
+              maxlength="1000"></textarea>
+            <span class="char-count">{{ reviewBody.length }} / 1000</span>
+          </div>
+
+          <!-- Error -->
+          @if (submitError) {
+            <p class="form-error">{{ submitError }}</p>
+          }
+
+          <!-- Actions -->
+          <div class="modal-actions">
+            <button type="button" class="btn-modal-cancel" (click)="closeModal()">
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn-modal-submit"
+              [disabled]="!canSubmit"
+              (click)="submitReview()">
+              @if (submitting) { Submitting… } @else { Submit Review }
+            </button>
+          </div>
+        </div>
+
+      }
+
+      <!-- ── SUCCESS ── -->
+      @else {
+        <div class="modal-success">
+          <span class="success-ornament">✦</span>
+          <h3 class="modal-title">Thank You</h3>
+          <p class="success-message">
+            Your review has been received and is currently awaiting our editorial review.
+            Once approved, it will be visible to fellow connoisseurs of this piece.
+            We appreciate you sharing your experience.
+          </p>
+          <button class="btn-modal-submit" (click)="closeModal()">Done</button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

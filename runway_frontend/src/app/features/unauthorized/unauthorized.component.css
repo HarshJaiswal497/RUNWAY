@@ -1,0 +1,122 @@
+:host {
+  --black:    #080808;
+  --black2:   #0f0f0f;
+  --gold:     #C9A84C;
+  --goldlt:   #D4AF6A;
+  --goldline: rgba(201, 168, 76, 0.22);
+  --golddim:  rgba(201, 168, 76, 0.1);
+  --white:    #F4F2EC;
+  --grey1:    #AAAAAA;
+  --grey2:    #666666;
+  display: block;
+  background: var(--black);
+  min-height: calc(100vh - 68px);
+}
+
+.ua-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 68px);
+  padding: 80px 40px;
+}
+
+.ua-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 560px;
+  width: 100%;
+}
+
+.ua-icon {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--goldline);
+  background: var(--golddim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.ua-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.08;
+  margin-bottom: 20px;
+}
+
+.ua-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  color: var(--grey1);
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  max-width: 400px;
+  margin-bottom: 40px;
+}
+
+.ua-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  padding: 12px 32px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.btn-primary:hover { background: var(--goldlt); }
+
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--grey2);
+  color: var(--grey1);
+  padding: 11px 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+.ua-rule {
+  width: 1px;
+  height: 60px;
+  background: var(--goldline);
+  margin-top: 64px;
+}
+
+@media (max-width: 480px) {
+  .ua-actions { flex-direction: column; }
+  .btn-primary, .btn-ghost { text-align: center; }
+}

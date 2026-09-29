@@ -1,0 +1,864 @@
+<div class="dashboard" [class.sidebar-collapsed]="!sidebarOpen()">
+    <!-- ── SIDEBAR ──────────────────────────────────── -->
+    <aside class="sidebar" [class.open]="sidebarOpen()">
+        <div class="sidebar-brand">
+            @if (sidebarOpen()) {
+            <div>
+                <span class="brand-text">RunWay</span>
+                <span class="brand-role">Admin Portal</span>
+            </div>
+            }
+            <button class="sidebar-toggle" (click)="toggleSidebar()">
+                @if (sidebarOpen()) {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                } @else {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                }
+            </button>
+        </div>
+
+        @if (sidebarOpen() && userDetails()) {
+        <div class="sidebar-user">
+            <div class="user-avatar">{{ userDetails().name?.charAt(0)?.toUpperCase() }}</div>
+            <div class="user-info">
+                <span class="user-name">{{ userDetails().name }}</span>
+                <span class="user-role-badge">Admin</span>
+            </div>
+        </div>
+        }
+
+        <nav class="sidebar-nav">
+            @for (item of navItems; track item.key) {
+            <button class="nav-item" [class.active]="activeSection() === item.key" (click)="setSection(item.key)">
+
+                @switch (item.key) {
+                @case ('overview') {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                }
+                @case ('users') {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M3 20c0-4 2.7-7 6-7h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    <circle cx="17" cy="15" r="3" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M14 21h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                }
+                @case ('orders') {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                }
+                @case ('reviews') {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                }
+                @case ('tickets') {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor"
+                        stroke-width="1.5" />
+                    <path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                }
+                @case ('notifications') {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor"
+                        stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                }
+                }
+
+                @if (sidebarOpen()) {
+                <span>{{ item.label }}</span>
+                @if(item.key==='orders' && pendingOrders() > 0 ) {
+                    <span class="nav-badge warn">{{ pendingOrders() }} </span>
+                }
+                @if (item.key === 'reviews' && pendingReviews() > 0) {
+                <span class="nav-badge warn">{{ pendingReviews() }}</span>
+                }
+                @if (item.key === 'tickets' && openTickets() > 0) {
+                <span class="nav-badge danger">{{ openTickets() }}</span>
+                }
+                }
+            </button>
+            }
+        </nav>
+
+        <button class="sidebar-logout" (click)="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            @if (sidebarOpen()) { <span>Sign Out</span> }
+        </button>
+    </aside>
+
+    <!-- ── MAIN ─────────────────────────────────────── -->
+    <main class="main">
+
+        <!-- ── OVERVIEW ───────────────────────────────── -->
+        @if (activeSection() === 'overview') {
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Overview</h1>
+                    <p class="section-sub">Platform at a glance</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card" (click)="setSection('users')">
+                    <span class="stat-label">Total Users</span>
+                    <span class="stat-value">{{ totalUsers() }}</span>
+                    <span class="stat-sub">{{ sellers().length }} sellers · {{ supportAgents().length }} support</span>
+                </div>
+                <div class="stat-card" (click)="setSection('orders')">
+                    <span class="stat-label">Total Orders</span>
+                    <span class="stat-value">{{ orderTotal() }}</span>
+                </div>
+                <div class="stat-card warn" (click)="setSection('reviews')">
+                    <span class="stat-label">Pending Reviews</span>
+                    <span class="stat-value warn">{{ pendingReviews() }}</span>
+                    <span class="stat-sub">Awaiting moderation</span>
+                </div>
+                <div class="stat-card danger" (click)="setSection('tickets')">
+                    <span class="stat-label">Open Tickets</span>
+                    <span class="stat-value danger">{{ openTickets() }}</span>
+                    <span class="stat-sub">Needs attention</span>
+                </div>
+            </div>
+
+            <!-- Quick actions -->
+            <div class="quick-actions">
+                <h2 class="subsection-title">Quick Actions</h2>
+                <div class="action-cards">
+                    <button class="action-card" (click)="showOnboardSellerModal.set(true)">
+                        <span class="action-icon">+</span>
+                        <span class="action-label">Onboard Seller</span>
+                    </button>
+                    <button class="action-card" (click)="showOnboardSupportModal.set(true)">
+                        <span class="action-icon">+</span>
+                        <span class="action-label">Onboard Support</span>
+                    </button>
+                    <button class="action-card" (click)="setSection('reviews')">
+                        <span class="action-icon">✓</span>
+                        <span class="action-label">Moderate Reviews</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- ── USERS ───────────────────────────────────── -->
+        @if (activeSection() === 'users') {
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">User Management</h1>
+                    <p class="section-sub">{{ totalUsers() }} registered users</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" (click)="showOnboardSellerModal.set(true)">
+                        + Onboard Seller
+                    </button>
+                    <button class="btn-primary" (click)="showOnboardSupportModal.set(true)">
+                        + Onboard Support
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-bar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M16.5 16.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <input class="search-input" type="text" placeholder="Search by name, username or email..."
+                    [value]="userSearch()" (input)="userSearch.set($any($event.target).value)">
+            </div>
+
+            @if (loadingUsers()) {
+            <div class="table-skeleton"></div>
+            } @else {
+            <div class="data-table">
+                <div class="table-head users-grid">
+                    <span>User</span>
+                    <span>Username</span>
+                    <span>Email</span>
+                    <span>Role</span>
+                    <span>Actions</span>
+                </div>
+                @for (user of filteredUsers(); track user.user_id) {
+                <div class="table-row users-grid">
+                    <div class="user-cell">
+                        <div class="mini-avatar">{{ user.name?.charAt(0)?.toUpperCase() }}</div>
+                        <span class="user-name-cell">{{ user.name }}</span>
+                    </div>
+                    <span class="cell-muted">{{ user.username }}</span>
+                    <span class="cell-muted">{{ user.email }}</span>
+                    <span class="role-badge" [class]="getRoleBadgeClass(getUserRole(user))">
+                        {{ getUserRole(user) }}
+                    </span>
+                    <div class="table-actions">
+                        @if (getUserRole(user) !== 'ADMIN') {
+                        @if (getUserRole(user) === 'CUSTOMER') {
+                        <button class="action-btn promote"
+                            (click)="selectedUser.set(user); showOnboardSellerModal.set(true)">
+                            → Seller
+                        </button>
+                        }
+                        @if (getUserRole(user) !== 'CUSTOMER') {
+                        <button class="action-btn demote" (click)="selectedUser.set(user); showOffboardModal.set(true)">
+                            Offboard
+                        </button>
+                        }
+                        <button class="action-btn delete"
+                            (click)="selectedUser.set(user); showDeleteUserModal.set(true); modalError.set(null)">
+                            Delete
+                        </button>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+
+        <!-- ── ORDERS ──────────────────────────────────── -->
+        @if (activeSection() === 'orders') {
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Orders</h1>
+                    <p class="section-sub">{{ orderTotal() }} total orders</p>
+                </div>
+            </div>
+
+            @if (loadingOrders()) {
+            <div class="table-skeleton"></div>
+            } @else {
+            <div class="data-table">
+                <div class="table-head orders-grid">
+                    <span>Order #</span>
+                    <span>User ID</span>
+                    <span>Amount</span>
+                    <span>Status</span>
+                    <span>Date</span>
+                    <span>Action</span>
+                </div>
+                @for (order of orders(); track order.id) {
+                <div class="table-row orders-grid">
+                    <span class="order-number">{{ order.orderNumber }}</span>
+                    <span class="cell-muted">#{{ order.userId }}</span>
+                    <span class="price-cell">
+                        {{ order.currency }} {{ order.totalAmount | number:'1.0-0' }}
+                    </span>
+                    <span class="status-badge" [class]="getOrderStatusClass(order.status)">
+                        {{ order.status }}
+                    </span>
+                    <span class="cell-muted">{{ order.createdAt | date:'dd MMM yy':'+0530' }}</span>
+                    <button class="action-btn view" (click)="viewOrder(order)">View</button>
+                </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-btn" [disabled]="orderPage() === 0" (click)="prevPage()">← Prev</button>
+                <span class="page-info">
+                    Page {{ orderPage() + 1 }} of {{ orderTotalPages() }}
+                </span>
+                <button class="page-btn" [disabled]="orderPage() >= orderTotalPages() - 1" (click)="nextPage()">
+                    Next →
+                </button>
+            </div>
+            }
+        </div>
+        }
+
+        <!-- ── REVIEWS ─────────────────────────────────── -->
+        @if (activeSection() === 'reviews') {
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Review Moderation</h1>
+                    <p class="section-sub">{{ pendingReviews() }} pending</p>
+                </div>
+                <div class="filter-tabs">
+                    @for (f of ['ALL', 'PENDING', 'APPROVED', 'REJECTED']; track f) {
+                    <button class="filter-tab" [class.active]="reviewFilter() === f"
+                        (click)="reviewFilter.set($any(f))">
+                        {{ f }}
+                        <span class="tab-count">
+                            {{ f === 'ALL' ? reviews().length : reviews().filter(r => r.status === f).length }}
+                        </span>
+                    </button>
+                    }
+                </div>
+            </div>
+
+            @if (loadingReviews()) {
+            <div class="table-skeleton"></div>
+            } @else if (filteredReviews().length === 0) {
+            <div class="empty-state">
+                <p class="empty-title">No reviews found</p>
+            </div>
+            } @else {
+            <div class="data-table">
+                <div class="table-head reviews-grid">
+                    <span>Title</span>
+                    <span>Body</span>
+                    <span>Product</span>
+                    <span>User</span>
+                    <span>Status</span>
+                    <span>Actions</span>
+                </div>
+                @for (review of filteredReviews(); track review.id) {
+                <div class="table-row reviews-grid">
+                    <span class="cell-white">{{ review.title }}</span>
+                    <span class="cell-muted cell-truncate">{{ review.body }}</span>
+                    <span class="cell-muted">#{{ review.productId }}</span>
+                    <span class="cell-muted">#{{ review.userId }}</span>
+                    <span class="status-badge" [class]="getReviewStatusClass(review.status)">
+                        {{ review.status }}
+                    </span>
+                    <div class="table-actions">
+                        @if (review.status === 'PENDING') {
+                        <button class="action-btn approve" (click)="updateReviewStatus(review.id, 'APPROVED')">
+                            Approve
+                        </button>
+                        <button class="action-btn reject" (click)="updateReviewStatus(review.id, 'REJECTED')">
+                            Reject
+                        </button>
+                        }
+                        <button class="action-btn delete" (click)="deleteReview(review.id)">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+
+        <!-- ── TICKETS ─────────────────────────────────── -->
+        @if (activeSection() === 'tickets') {
+        <div class="section">
+            @if (!activeTicket()) {
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Support Requests</h1>
+                    <p class="section-sub">{{ filteredTickets().length }} requests</p>
+                </div>
+                <div class="filter-tabs">
+                    @for (f of ['ALL', 'OPEN', 'IN_PROGRESS', 'CLOSED']; track f) {
+                    <button class="filter-tab" [class.active]="ticketFilter() === f"
+                        (click)="ticketFilter.set($any(f))">
+                        {{ f }}
+                        <span class="tab-count">
+                            {{ f === 'ALL' ? tickets().length : tickets().filter(t => t.status === f).length }}
+                        </span>
+                    </button>
+                    }
+                </div>
+            </div>
+
+            @if (loadingTickets()) {
+            <div class="table-skeleton"></div>
+            } @else {
+            <div class="data-table">
+                <div class="table-head tickets-grid">
+                    <span>Subject</span>
+                    <span>Priority</span>
+                    <span>Status</span>
+                    <span>User</span>
+                    <span>Created</span>
+                    <span>Actions</span>
+                </div>
+                @for (ticket of filteredTickets(); track ticket.id) {
+                <div class="table-row tickets-grid">
+                    <span class="cell-white">{{ ticket.subject }}</span>
+                    <span class="priority-badge" [class]="getPriorityClass(ticket.priority)">
+                        {{ ticket.priority }}
+                    </span>
+                    <span class="status-badge" [class]="getTicketStatusClass(ticket.status)">
+                        {{ ticketStatusLabel(ticket.status) }}
+                    </span>
+                    <span class="cell-muted">#{{ ticket.userId }}</span>
+                    <span class="cell-muted">{{ normalizeDate(ticket.createdAt) | date:'dd MMM':'+0530' }}</span>
+                    <div class="table-actions">
+                        <button class="action-btn view" (click)="openTicket(ticket)">View</button>
+                        @if (ticket.status !== 'CLOSED') {
+                        <button class="action-btn close-btn" (click)="updateTicketStatus(ticket, 'CLOSED')">
+                            Close
+                        </button>
+                        }
+                        <button class="action-btn delete" (click)="deleteTicket(ticket.id)">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+
+            } @else {
+            <!-- Ticket detail -->
+            <button class="back-btn" (click)="closeTicketView()">← Back to Requests</button>
+            <div class="ticket-detail-header">
+                <div>
+                    <h1 class="section-title">{{ activeTicket()!.subject }}</h1>
+                    <div class="ticket-meta-row">
+                        <span class="priority-badge" [class]="getPriorityClass(activeTicket()!.priority)">
+                            {{ activeTicket()!.priority }}
+                        </span>
+                        <span class="status-badge" [class]="getTicketStatusClass(activeTicket()!.status)">
+                            {{ ticketStatusLabel(activeTicket()!.status) }}
+                        </span>
+                        <span class="cell-muted">User #{{ activeTicket()!.userId }}</span>
+                        @if (activeTicket()!.orderId) {
+                        <span class="cell-muted">Order #{{ activeTicket()!.orderId }}</span>
+                        }
+                        <span class="cell-muted">
+                            {{ normalizeDate(activeTicket()!.createdAt) | date:'dd MMM yyyy, HH:mm':'+0530' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="ticket-actions-row">
+                    @if (activeTicket()!.status === 'OPEN') {
+                    <button class="action-btn progress-btn"
+                        (click)="updateTicketStatus(activeTicket()!, 'IN_PROGRESS')">
+                        Mark In Progress
+                    </button>
+                    }
+                    @if (activeTicket()!.status !== 'CLOSED') {
+                    <button class="action-btn close-btn" (click)="updateTicketStatus(activeTicket()!, 'CLOSED')">
+                        Close Request
+                    </button>
+                    }
+                    <button class="action-btn delete" (click)="deleteTicket(activeTicket()!.id)">
+                        Delete Ticket
+                    </button>
+                </div>
+            </div>
+
+            <!-- Assignment row -->
+            <div class="assign-row">
+                <span class="assign-label">Assigned Advisor</span>
+                @if (activeTicket()!.assignedTo) {
+                    <span class="assign-current">{{ getAgentName(activeTicket()!.assignedTo) }}</span>
+                } @else {
+                    <span class="assign-current" style="color:var(--grey2)">Unassigned</span>
+                    @if (activeTicket()!.status !== 'CLOSED') {
+                    <rw-select
+                        placeholder="— Select advisor —"
+                        [options]="supportUserOpts"
+                        [ngModel]="selectedAssignee()"
+                        (ngModelChange)="selectedAssignee.set($event)">
+                    </rw-select>
+                    <button class="action-btn assign-btn"
+                        [disabled]="!selectedAssignee() || assigningTicket()"
+                        (click)="assignTicket(activeTicket()!)">
+                        @if (assigningTicket()) { Assigning… } @else { Assign }
+                    </button>
+                    }
+                }
+                @if (assignSuccess()) {
+                    <span class="assign-feedback success">{{ assignSuccess() }}</span>
+                }
+                @if (assignError()) {
+                    <span class="assign-feedback error">{{ assignError() }}</span>
+                }
+            </div>
+
+            <div class="conversation" #convScroll>
+                @if (loadingMessages()) {
+                <div class="table-skeleton" style="height:100px"></div>
+                } @else if (activeMessages().length === 0) {
+                <div class="empty-inline">No messages yet.</div>
+                } @else {
+                @for (msg of activeMessages(); track msg.id; let i = $index) {
+                  <div class="msg-group"
+                    [class.mine]="isStaffMsg(msg)"
+                    [class.theirs]="!isStaffMsg(msg)"
+                    [class.last-in-group]="isLastInGroup(i)">
+                    @if (isFirstInGroup(i)) {
+                      <div class="msg-sender-label">
+                        {{ isStaffMsg(msg) ? 'RunWay Advisor' : 'Customer #' + msg.senderId }}
+                      </div>
+                    }
+                    <div class="msg-bubble" [class.mine]="isStaffMsg(msg)" [class.theirs]="!isStaffMsg(msg)">
+                      <p class="msg-text">{{ msg.message }}</p>
+                    </div>
+                    @if (isLastInGroup(i)) {
+                      <div class="msg-time">{{ normalizeDate(msg.createdAt) | date:'dd MMM, HH:mm':'+0530' }}</div>
+                    }
+                  </div>
+                }
+                }
+            </div>
+
+            @if (activeTicket()!.status === 'CLOSED') {
+            <div class="closed-notice">This request has been resolved — no further replies can be sent.</div>
+            } @else {
+            <div class="reply-box">
+                <textarea class="reply-input" placeholder="Type your reply..." [value]="replyMessage()"
+                    (input)="replyMessage.set($any($event.target).value)" rows="3"></textarea>
+                <button class="btn-primary" [disabled]="sendingReply() || !replyMessage().trim()" (click)="sendReply()">
+                    @if (sendingReply()) { Sending... } @else { Send Reply }
+                </button>
+            </div>
+            }
+            }
+        </div>
+        }
+
+        <!-- ── NOTIFICATIONS ───────────────────────────── -->
+        @if (activeSection() === 'notifications') {
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Notifications</h1>
+                    <p class="section-sub">{{ filteredNotifications().length }} logs</p>
+                </div>
+            </div>
+
+            <!-- Service / event filter -->
+            <div class="filter-tabs" style="margin-bottom: 20px;">
+                @for (grp of notifFilterGroups; track grp.value) {
+                <button class="filter-tab"
+                    [class.active]="notifEventFilter() === grp.value"
+                    (click)="notifEventFilter.set(grp.value)">
+                    {{ grp.label }}
+                    <span class="tab-count">
+                        {{ grp.value === 'ALL'
+                            ? notifications().length
+                            : notifications().filter(n => n.event?.startsWith(grp.value)).length }}
+                    </span>
+                </button>
+                }
+            </div>
+
+            @if (loadingNotifications()) {
+            <div class="table-skeleton"></div>
+            } @else if (filteredNotifications().length === 0) {
+            <div class="empty-state">
+                <p class="empty-title">No notification logs</p>
+            </div>
+            } @else {
+            <div class="data-table">
+                <div class="table-head notif-grid">
+                    <span>ID</span>
+                    <span>User</span>
+                    <span>Event</span>
+                    <span>Channel</span>
+                    <span>Status</span>
+                    <span>Sent At</span>
+                </div>
+                @for (log of filteredNotifications(); track log.id) {
+                <div class="notif-entry">
+                    <div class="table-row notif-grid notif-row"
+                        (click)="toggleNotifExpand(log.id)"
+                        [class.notif-expanded]="expandedNotifId() === log.id">
+                        <span class="cell-muted">#{{ log.id }}</span>
+                        <span class="cell-muted">#{{ log.userId }}</span>
+                        <div class="notif-event-wrap">
+                            <span class="cell-white">{{ log.event }}</span>
+                            @if (log.subject) {
+                                <span class="notif-subject">{{ log.subject }}</span>
+                            }
+                        </div>
+                        <span class="channel-badge channel-{{ log.channel.toLowerCase() }}">
+                            {{ log.channel }}
+                        </span>
+                        <span class="notif-status-badge" [class]="getNotifStatusClass(log.status)">
+                            {{ log.status }}
+                        </span>
+                        <span class="cell-muted">
+                            {{ normalizeDate(log.sentAt ?? log.createdAt) | date:'dd MMM, HH:mm':'+0530' }}
+                        </span>
+                    </div>
+                    @if (expandedNotifId() === log.id && (log.content || log.errorMessage)) {
+                    <div class="notif-expand">
+                        @if (log.content) {
+                        <div class="notif-expand-row">
+                            <span class="notif-expand-label">Content</span>
+                            <span class="notif-expand-val">{{ log.content }}</span>
+                        </div>
+                        }
+                        @if (log.errorMessage) {
+                        <div class="notif-expand-row">
+                            <span class="notif-expand-label">Error</span>
+                            <span class="notif-expand-val notif-expand-error">{{ log.errorMessage }}</span>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+
+    </main>
+</div>
+
+<!-- ── ONBOARD SELLER MODAL ──────────────────────── -->
+@if (showOnboardSellerModal()) {
+<div class="modal-backdrop" (click)="showOnboardSellerModal.set(false)">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Onboard Seller</h2>
+            <button class="modal-close" (click)="showOnboardSellerModal.set(false)">✕</button>
+        </div>
+        @if (modalError()) { <div class="modal-error">{{ modalError() }}</div> }
+        @if (modalSuccess()) { <div class="modal-success">{{ modalSuccess() }}</div> }
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input class="form-input" type="text" [value]="onboardUsername()"
+                    (input)="onboardUsername.set($any($event.target).value)" placeholder="Enter existing username">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showOnboardSellerModal.set(false)">Cancel</button>
+            <button class="btn-primary" [disabled]="modalLoading()" (click)="onboardSeller()">
+                @if (modalLoading()) { Processing... } @else { Onboard as Seller }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- ── ONBOARD SUPPORT MODAL ─────────────────────── -->
+@if (showOnboardSupportModal()) {
+<div class="modal-backdrop" (click)="showOnboardSupportModal.set(false)">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Onboard Support</h2>
+            <button class="modal-close" (click)="showOnboardSupportModal.set(false)">✕</button>
+        </div>
+        @if (modalError()) { <div class="modal-error">{{ modalError() }}</div> }
+        @if (modalSuccess()) { <div class="modal-success">{{ modalSuccess() }}</div> }
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input class="form-input" type="text" [value]="onboardUsername()"
+                    (input)="onboardUsername.set($any($event.target).value)" placeholder="Enter existing username">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showOnboardSupportModal.set(false)">Cancel</button>
+            <button class="btn-primary" [disabled]="modalLoading()" (click)="onboardSupport()">
+                @if (modalLoading()) { Processing... } @else { Onboard as Support }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- ── OFFBOARD MODAL ─────────────────────────────── -->
+@if (showOffboardModal()) {
+<div class="modal-backdrop" (click)="showOffboardModal.set(false)">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Offboard User</h2>
+            <button class="modal-close" (click)="showOffboardModal.set(false)">✕</button>
+        </div>
+        @if (modalError()) { <div class="modal-error">{{ modalError() }}</div> }
+        @if (modalSuccess()) { <div class="modal-success">{{ modalSuccess() }}</div> }
+        <div class="modal-body">
+            <p class="confirm-text">
+                Demote <strong>{{ selectedUser()?.username }}</strong> to Customer role?
+                They will lose all {{ getUserRole(selectedUser()!) }} privileges.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showOffboardModal.set(false)">Cancel</button>
+            <button class="btn-warning" [disabled]="modalLoading()" (click)="offboardUser()">
+                @if (modalLoading()) { Processing... } @else { Demote to Customer }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- ── DELETE USER MODAL ──────────────────────────── -->
+@if (showDeleteUserModal()) {
+<div class="modal-backdrop" (click)="showDeleteUserModal.set(false)">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Delete User</h2>
+            <button class="modal-close" (click)="showDeleteUserModal.set(false)">✕</button>
+        </div>
+        @if (modalError()) { <div class="modal-error">{{ modalError() }}</div> }
+        <div class="modal-body">
+            <p class="confirm-text">
+                Permanently delete <strong>{{ selectedUser()?.username }}</strong>?
+                This cannot be undone.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showDeleteUserModal.set(false)">Cancel</button>
+            <button class="btn-danger" [disabled]="modalLoading()" (click)="deleteUser()">
+                @if (modalLoading()) { Deleting... } @else { Delete User }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- ── ORDER DETAIL MODAL ─────────────────────────── -->
+@if (showOrderModal() && selectedOrder()) {
+<div class="modal-backdrop" (click)="showOrderModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">{{ selectedOrder()!.orderNumber }}</h2>
+            <button class="modal-close" (click)="showOrderModal.set(false)">✕</button>
+        </div>
+        @if (modalError()) { <div class="modal-error">{{ modalError() }}</div> }
+        @if (modalSuccess()) { <div class="modal-success">{{ modalSuccess() }}</div> }
+        <div class="modal-body">
+            <!-- Order info -->
+            <div class="order-info-grid">
+                <div class="order-info-item">
+                    <span class="info-label">User ID</span>
+                    <span class="info-value">#{{ selectedOrder()!.userId }}</span>
+                </div>
+                <div class="order-info-item">
+                    <span class="info-label">Total</span>
+                    <span class="info-value price-cell">
+                        {{ selectedOrder()!.currency }} {{ selectedOrder()!.totalAmount | number:'1.2-2' }}
+                    </span>
+                </div>
+                <div class="order-info-item">
+                    <span class="info-label">Created</span>
+                    <span class="info-value">{{ selectedOrder()!.createdAt | date:'dd MMM yyyy' }}</span>
+                </div>
+                <div class="order-info-item">
+                    <span class="info-label">Current Status</span>
+                    <span class="status-badge" [class]="getOrderStatusClass(selectedOrder()!.status)">
+                        {{ selectedOrder()!.status }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Shipping -->
+            <div class="form-group">
+                <label class="form-label">Shipping Address</label>
+                <p class="info-value">{{ selectedOrder()!.shippingAddress }}</p>
+            </div>
+
+            <!-- Order lines -->
+            @if (selectedOrder()!.lines && selectedOrder()!.lines.length > 0) {
+            <div class="form-group">
+                <label class="form-label">Items</label>
+                <div class="order-lines">
+                    @for (line of selectedOrder()!.lines; track line.id) {
+                    <div class="order-line">
+                        <span class="cell-white">{{ line.productTitle }}</span>
+                        <span class="cell-muted">x{{ line.quantity }}</span>
+                        <span class="price-cell">
+                            {{ selectedOrder()!.currency }} {{ line.lineTotal | number:'1.0-0' }}
+                        </span>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- Update status -->
+            <div class="form-group">
+                <label class="form-label">Update Status</label>
+                <rw-select
+                    [options]="orderStatusOpts"
+                    [ngModel]="newOrderStatus()"
+                    (ngModelChange)="newOrderStatus.set($event)">
+                </rw-select>
+            </div>
+
+            <!-- Shipment section -->
+            <div class="form-group">
+                <label class="form-label">Shipment</label>
+                @if (loadingShipment()) {
+                <p class="cell-muted">Loading shipment...</p>
+                } @else if (!activeShipment()) {
+                <p class="cell-muted">No shipment yet — set order to PROCESSING to create one.</p>
+                } @else {
+                <div class="shipment-info">
+                    <div class="order-info-grid">
+                        <div class="order-info-item">
+                            <span class="info-label">Shipment Status</span>
+                            <span class="status-badge" [class]="getShipmentStatusClass(activeShipment()!.status)">
+                                {{ activeShipment()!.status }}
+                            </span>
+                        </div>
+                        <div class="order-info-item">
+                            <span class="info-label">Carrier</span>
+                            <span class="info-value">{{ activeShipment()!.carrier ?? 'Not assigned' }}</span>
+                        </div>
+                        <div class="order-info-item">
+                            <span class="info-label">Tracking Number</span>
+                            <span class="info-value">{{ activeShipment()!.trackingNumber ?? 'Not assigned' }}</span>
+                        </div>
+                        <div class="order-info-item">
+                            <span class="info-label">Shipped At</span>
+                            <span class="info-value">{{ activeShipment()!.shippedAt ? (activeShipment()!.shippedAt |
+                                date:'dd MMM yyyy') : '—' }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Update shipment status -->
+                    <div class="form-group" style="margin-top: 12px">
+                        <label class="form-label">Update Shipment Status</label>
+                        <div style="display:flex; gap:8px">
+                            <rw-select
+                                [options]="shipmentStatusOpts"
+                                [ngModel]="newShipmentStatus()"
+                                (ngModelChange)="newShipmentStatus.set($event)">
+                            </rw-select>
+                            <button class="btn-secondary" (click)="updateShipmentStatus()">Update</button>
+                        </div>
+                    </div>
+
+                    <!-- Assign tracking -->
+                    <div class="form-group" style="margin-top: 12px">
+                        <label class="form-label">Assign Tracking</label>
+                        <div style="display:flex; gap:8px">
+                            <input class="form-input" placeholder="Carrier (e.g. BlueDart)"
+                                [(ngModel)]="trackingForm.carrier" style="flex:1">
+                            <input class="form-input" placeholder="Tracking number"
+                                [(ngModel)]="trackingForm.trackingNumber" style="flex:1">
+                            <button class="btn-secondary" (click)="assignTracking()">Assign</button>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showOrderModal.set(false)">Close</button>
+            <button class="btn-primary" [disabled]="modalLoading()" (click)="updateOrderStatus()">
+                @if (modalLoading()) { Updating... } @else { Update Status }
+            </button>
+        </div>
+    </div>
+</div>
+}
+

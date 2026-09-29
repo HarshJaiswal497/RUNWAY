@@ -1,0 +1,131 @@
+:host {
+  --black:    #080808;
+  --black2:   #0f0f0f;
+  --gold:     #C9A84C;
+  --goldlt:   #D4AF6A;
+  --goldline: rgba(201, 168, 76, 0.22);
+  --white:    #F4F2EC;
+  --grey1:    #AAAAAA;
+  --grey2:    #666666;
+  display: block;
+  background: var(--black);
+  min-height: calc(100vh - 68px);
+}
+
+.nf-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 68px);
+  padding: 80px 40px;
+}
+
+.nf-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 640px;
+  width: 100%;
+}
+
+/* Large decorative number — sits behind content */
+.nf-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(140px, 22vw, 240px);
+  font-weight: 300;
+  line-height: 0.85;
+  color: var(--gold);
+  opacity: 0.07;
+  letter-spacing: -0.02em;
+  user-select: none;
+  position: absolute;
+  top: -20px;
+  left: -12px;
+}
+
+.nf-content {
+  position: relative;
+  z-index: 1;
+  padding-top: 60px;
+}
+
+.eyebrow {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.nf-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 6vw, 60px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+
+.nf-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  color: var(--grey1);
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  max-width: 420px;
+  margin-bottom: 40px;
+}
+
+.nf-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  padding: 12px 32px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.btn-primary:hover { background: var(--goldlt); }
+
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--grey2);
+  color: var(--grey1);
+  padding: 11px 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+.nf-rule {
+  width: 1px;
+  height: 60px;
+  background: var(--goldline);
+  margin-top: 64px;
+}
+
+@media (max-width: 480px) {
+  .nf-actions { flex-direction: column; }
+  .btn-primary, .btn-ghost { text-align: center; }
+}

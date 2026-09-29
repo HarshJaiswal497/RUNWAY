@@ -1,0 +1,459 @@
+:host {
+  --black:    #080808;
+  --black2:   #0f0f0f;
+  --black3:   #161616;
+  --gold:     #C9A84C;
+  --goldlt:   #D4AF6A;
+  --golddim:  rgba(201,168,76,0.18);
+  --goldline: rgba(201,168,76,0.22);
+  --white:    #F4F2EC;
+  --grey1:    #AAAAAA;
+  --grey2:    #666666;
+  --grey3:    #333333;
+  display: block;
+  background: var(--black);
+  min-height: 100vh;
+}
+
+/* ── PAGE SHELL ─────────────────────────────────────────────────────────────── */
+.payment-page,
+.history-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 52px 24px 100px;
+  min-height: 100vh;
+}
+
+.history-page { max-width: 1000px; padding: 52px 72px 100px; }
+
+@media (max-width: 1024px) { .history-page { padding: 40px 32px 80px; } }
+@media (max-width: 640px)  { .payment-page, .history-page { padding: 28px 20px 60px; } }
+
+/* ── BACK LINK ──────────────────────────────────────────────────────────────── */
+.back-link {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--grey2);
+  text-decoration: none;
+  margin-bottom: 36px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--gold); }
+
+/* ── PAGE HEADER ────────────────────────────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--goldline);
+  padding-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.eyebrow {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 400;
+  color: var(--white);
+}
+
+.page-meta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* ── PAYMENT CARD ───────────────────────────────────────────────────────────── */
+.payment-card {
+  background: var(--black2);
+  border: 1px solid var(--goldline);
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── STATUS HERO ────────────────────────────────────────────────────────────── */
+.status-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.status-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.status-hero.status-completed .status-icon-wrap { background: rgba(76,175,80,0.1); color: #4caf50; border: 1px solid rgba(76,175,80,0.3); }
+.status-hero.status-pending   .status-icon-wrap { background: var(--golddim);      color: var(--gold); border: 1px solid var(--goldline); }
+.status-hero.status-failed    .status-icon-wrap { background: rgba(229,85,85,0.1); color: #e55; border: 1px solid rgba(229,85,85,0.3); }
+.status-hero.status-refunded  .status-icon-wrap { background: rgba(127,119,221,0.1); color: #a78bfa; border: 1px solid rgba(127,119,221,0.3); }
+
+/* ── DETAIL ROWS ────────────────────────────────────────────────────────────── */
+.detail-rule {
+  height: 1px;
+  background: var(--goldline);
+}
+
+.detail-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.detail-key {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--grey2);
+}
+
+.detail-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  color: var(--white);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-align: right;
+}
+
+.detail-val.amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--goldlt);
+}
+
+.mono {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+
+.mono-note {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  color: var(--grey2);
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.info-note {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  color: var(--grey2);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  font-style: italic;
+}
+
+.payment-note {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  color: var(--grey2);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+
+/* ── PAYMENT STATUS BADGES ──────────────────────────────────────────────────── */
+.pay-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.pay-completed, .status-completed { background: rgba(76,175,80,0.1);    color: #4caf50; border: 1px solid rgba(76,175,80,0.25); }
+.pay-pending,   .status-pending   { background: var(--golddim);          color: var(--gold); border: 1px solid var(--goldline); }
+.pay-failed,    .status-failed    { background: rgba(229,85,85,0.08);    color: #e55;    border: 1px solid rgba(229,85,85,0.25); }
+.pay-refunded,  .status-refunded  { background: rgba(127,119,221,0.1);   color: #a78bfa; border: 1px solid rgba(127,119,221,0.25); }
+
+/* ── STATE CARDS ────────────────────────────────────────────────────────────── */
+.state-card {
+  align-items: center;
+  text-align: center;
+  padding: 60px 36px;
+}
+
+.state-icon-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.state-icon-wrap.success { background: rgba(76,175,80,0.1); color: #4caf50; border: 1px solid rgba(76,175,80,0.3); }
+.state-icon-wrap.failed  { background: rgba(229,85,85,0.1);  color: #e55;    border: 1px solid rgba(229,85,85,0.3); }
+
+.state-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--white);
+}
+
+.state-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  color: var(--grey2);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+
+/* ── ACTION ROW ─────────────────────────────────────────────────────────────── */
+.action-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.action-row.centered { justify-content: center; }
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  padding: 13px 32px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.25s;
+}
+.btn-primary:hover { background: var(--goldlt); transform: translateY(-1px); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.25s;
+}
+.btn-ghost:hover { background: var(--golddim); }
+
+/* ── SUMMARY GRID (history page) ────────────────────────────────────────────── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+@media (max-width: 640px) { .summary-grid { grid-template-columns: repeat(2,1fr); } }
+
+.summary-card {
+  background: var(--black2);
+  border: 1px solid var(--goldline);
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--grey2);
+}
+
+.summary-amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--goldlt);
+}
+
+.summary-count {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.summary-count.completed { color: #4caf50; }
+.summary-count.pending   { color: var(--gold); }
+.summary-count.failed    { color: #e55; }
+
+/* ── HISTORY TABLE ──────────────────────────────────────────────────────────── */
+.table-wrap {
+  border: 1px solid var(--goldline);
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--black2);
+}
+
+.history-table thead tr {
+  border-bottom: 1px solid var(--goldline);
+}
+
+.history-table th {
+  padding: 14px 18px;
+  text-align: left;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7.5px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.table-row {
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.table-row:hover { background: var(--black3); }
+.table-row:last-child { border-bottom: none; }
+
+.history-table td { padding: 16px 18px; vertical-align: middle; }
+
+.col-order { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 500; color: var(--white); letter-spacing: 0.1em; }
+.col-date  { font-family: 'Montserrat', sans-serif; font-size: 9px; color: var(--grey2); }
+.col-items { font-family: 'Montserrat', sans-serif; font-size: 9px; color: var(--grey1); }
+.col-amount { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; color: var(--goldlt); }
+
+.retry-btn {
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  padding: 5px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7.5px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.retry-btn:hover { background: var(--goldlt); }
+
+.view-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--grey3);
+  transition: color 0.2s;
+}
+.table-row:hover .view-link { color: var(--gold); }
+
+/* ── PAGINATION ─────────────────────────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 32px;
+}
+
+.page-btn {
+  background: transparent;
+  border: 1px solid var(--grey3);
+  color: var(--grey1);
+  padding: 10px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+.page-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.page-info { font-family: 'Montserrat', sans-serif; font-size: 9px; color: var(--grey2); letter-spacing: 0.1em; }
+
+/* ── SPINNER ────────────────────────────────────────────────────────────────── */
+.spinner {
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--grey3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.large-spinner { width: 44px; height: 44px; border-width: 2px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── ERROR / STATES ─────────────────────────────────────────────────────────── */
+.error-banner {
+  background: rgba(229,85,85,0.08);
+  border: 1px solid rgba(229,85,85,0.3);
+  color: #e55;
+  padding: 12px 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  margin-bottom: 20px;
+}
+
+.state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 80px 20px;
+  text-align: center;
+}
+.state-message p { font-family: 'Montserrat', sans-serif; font-size: 10.5px; color: var(--grey2); letter-spacing: 0.08em; }
+
+/* ── SKELETONS ──────────────────────────────────────────────────────────────── */
+.skeleton-list { display: flex; flex-direction: column; gap: 1px; }
+.skeleton-row  { height: 58px; background: var(--black2); }
+.skeleton-pulse { animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }

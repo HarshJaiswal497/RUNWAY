@@ -1,0 +1,964 @@
+:host {
+  --black:    #080808;
+  --black2:   #0f0f0f;
+  --black3:   #161616;
+  --gold:     #C9A84C;
+  --goldlt:   #D4AF6A;
+  --golddim:  rgba(201,168,76,0.18);
+  --goldline: rgba(201,168,76,0.22);
+  --white:    #F4F2EC;
+  --grey1:    #AAAAAA;
+  --grey2:    #666666;
+  --grey3:    #333333;
+  display: block;
+  background: var(--black);
+  min-height: 100vh;
+}
+
+.checkout-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 52px 24px 100px;
+  min-height: 100vh;
+}
+
+/* ── STEP INDICATOR ─────────────────────────────────────────────────────────── */
+.steps-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 52px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+.step.active { opacity: 1; }
+.step.done   { opacity: 0.6; }
+
+.step-num {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+.step.active .step-num {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.step-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.step-line {
+  flex: 1;
+  height: 1px;
+  background: var(--goldline);
+  margin: 0 14px;
+}
+
+/* ── CARD ───────────────────────────────────────────────────────────────────── */
+.checkout-card {
+  background: var(--black2);
+  border: 1px solid var(--goldline);
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+
+/* ── REVIEW ITEMS ───────────────────────────────────────────────────────────── */
+.review-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.review-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  color: var(--white);
+  letter-spacing: 0.05em;
+  flex: 1;
+}
+
+.review-qty {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  color: var(--grey2);
+  margin: 0 16px;
+}
+
+.review-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--goldlt);
+}
+
+.review-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 8px;
+}
+
+.review-total-row > span:first-child {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--grey1);
+}
+
+.review-total {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--goldlt);
+}
+
+/* ── FORM ───────────────────────────────────────────────────────────────────── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--grey1);
+}
+
+.required { color: var(--gold); }
+.optional  { color: var(--grey2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+.form-input {
+  background: var(--black3);
+  border: 1px solid var(--grey3);
+  color: var(--white);
+  padding: 13px 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  resize: vertical;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.form-input::placeholder { color: var(--grey2); }
+.form-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.form-hint {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  color: var(--grey3);
+  letter-spacing: 0.1em;
+  text-align: right;
+}
+
+/* ── PAYMENT ────────────────────────────────────────────────────────────────── */
+.payment-subtext {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  color: var(--grey2);
+  letter-spacing: 0.05em;
+}
+
+.payment-amount-box {
+  background: var(--black3);
+  border: 1px solid var(--goldline);
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--grey2);
+}
+
+.payment-amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px;
+  font-weight: 300;
+  color: var(--goldlt);
+}
+
+.payment-hint {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  color: var(--grey2);
+  letter-spacing: 0.03em;
+  line-height: 1.8;
+  font-style: italic;
+}
+
+/* ── STATE CARDS ────────────────────────────────────────────────────────────── */
+.state-card {
+  align-items: center;
+  text-align: center;
+  padding: 60px 36px;
+}
+
+.state-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.success-icon { background: rgba(76,175,80,0.1); color: #4caf50; border: 1px solid rgba(76,175,80,0.3); }
+.fail-icon    { background: rgba(229,85,85,0.1);  color: #e55;    border: 1px solid rgba(229,85,85,0.3); }
+
+.state-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  color: var(--grey2);
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+}
+
+.continue-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  color: var(--grey2);
+  text-decoration: none;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  transition: color 0.2s;
+  display: block;
+  text-align: center;
+}
+.continue-link:hover { color: var(--gold); }
+
+/* ── BUTTONS ────────────────────────────────────────────────────────────────── */
+.btn-primary {
+  display: block;
+  width: 100%;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  padding: 15px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.25s;
+  margin-top: 8px;
+}
+.btn-primary:hover:not(:disabled) { background: var(--goldlt); transform: translateY(-1px); }
+.btn-primary:disabled { background: var(--grey3); color: var(--grey2); cursor: not-allowed; }
+
+/* ── ERROR BANNER ───────────────────────────────────────────────────────────── */
+.error-banner {
+  background: rgba(229,85,85,0.08);
+  border: 1px solid rgba(229,85,85,0.3);
+  color: #e55;
+  padding: 12px 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+/* ── LOADING ────────────────────────────────────────────────────────────────── */
+.state-message {
+  display: flex;
+  justify-content: center;
+  padding: 100px 0;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--grey3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Razorpay order ID display */
+.razorpay-id {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--black3);
+  border: 1px solid var(--goldline);
+  padding: 12px 18px;
+}
+
+.razorpay-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--grey2);
+}
+
+.razorpay-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+
+.razorpay-note {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  color: var(--grey2);
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+/* ── PAY BUTTON ─────────────────────────────────────────────────────────────── */
+
+/* ── PAY BUTTON ─────────────────────────────────────────────────────────────── */
+.btn-pay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* ── CANCELLED NOTICE ───────────────────────────────────────────────────────── */
+.cancelled-notice {
+  background: rgba(229,85,85,0.08);
+  border: 1px solid rgba(229,85,85,0.3);
+  color: #e55;
+  padding: 12px 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+/* ── RAZORPAY ID ROW ────────────────────────────────────────────────────────── */
+.razorpay-id {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--black3);
+  border: 1px solid var(--goldline);
+  padding: 12px 18px;
+}
+.razorpay-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--grey2);
+}
+.razorpay-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+
+/* ── MODAL OVERLAY ──────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  background: var(--black2);
+  border: 1px solid var(--goldline);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.modal-header {
+  background: var(--black3);
+  border-bottom: 1px solid var(--goldline);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-brand { display:flex; align-items:center; gap:14px; }
+
+.modal-logo {
+  width: 40px; height: 40px;
+  background: var(--golddim);
+  border: 1px solid var(--goldline);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 400; color: var(--gold);
+  flex-shrink: 0;
+}
+
+.modal-brand-info { display:flex; flex-direction:column; gap:3px; }
+
+.modal-brand-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--white);
+}
+
+.modal-brand-amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 300; color: var(--goldlt);
+}
+
+.modal-close {
+  background: none; border: none;
+  color: var(--grey2); font-size: 14px; cursor: pointer;
+  padding: 6px; transition: color 0.2s;
+  font-family: 'Montserrat', sans-serif;
+}
+.modal-close:hover { color: var(--white); }
+
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--grey3);
+  background: var(--black);
+}
+
+.modal-tab {
+  flex: 1; padding: 13px 8px;
+  background: none; border: none;
+  border-bottom: 2px solid transparent;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--grey2); cursor: pointer; transition: all 0.2s;
+}
+.modal-tab.active { color: var(--gold); border-bottom-color: var(--gold); background: var(--black2); }
+.modal-tab:hover:not(.active) { color: var(--grey1); }
+
+.modal-form {
+  padding: 24px 24px 0;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+
+.field-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px; font-weight: 500;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--grey2);
+}
+
+.field-input {
+  background: var(--black3);
+  border: 1px solid var(--grey3);
+  color: var(--white);
+  padding: 11px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; letter-spacing: 0.04em;
+  transition: border-color 0.2s; width: 100%;
+}
+.field-input::placeholder { color: var(--grey2); }
+.field-input:focus { outline: none; border-color: var(--gold); }
+
+.field-select {
+  cursor: pointer; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  padding-right: 36px;
+}
+.field-select option { background: var(--black3); color: var(--white); }
+
+.modal-note {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; color: var(--grey2);
+  letter-spacing: 0.04em; font-style: italic; margin-top: -6px;
+}
+
+.modal-error {
+  margin: 8px 24px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; color: #e55; letter-spacing: 0.04em;
+}
+
+.modal-pay-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: calc(100% - 48px);
+  margin: 20px 24px;
+  background: var(--gold); color: var(--black); border: none;
+  padding: 14px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 500;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.25s;
+}
+.modal-pay-btn:hover { background: var(--goldlt); transform: translateY(-1px); }
+
+.modal-secure {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 24px 18px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px; color: var(--grey2); letter-spacing: 0.06em;
+}
+
+/* ── PROCESSING OVERLAY ─────────────────────────────────────────────────────── */
+.processing-overlay {
+  position: fixed; inset: 0;
+  background: rgba(8,8,8,0.94);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.processing-card {
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  padding: 52px 48px;
+  background: var(--black2);
+  border: 1px solid var(--goldline);
+  text-align: center; max-width: 360px; width: 100%;
+  animation: modalIn 0.2s ease;
+}
+
+.processing-spinner {
+  width: 44px; height: 44px;
+  border: 2px solid var(--grey3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.processing-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 400; color: var(--white);
+}
+
+.processing-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px; color: var(--grey2);
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-top: -6px;
+}
+
+/* ── COUNTDOWN RING ─────────────────────────────────────────────────────────── */
+.countdown-wrap {
+  position: relative;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.countdown-ring {
+  width: 44px; height: 44px;
+  position: absolute; top: 0; left: 0;
+}
+
+.countdown-ring circle {
+  transition: stroke-dashoffset 0.9s linear;
+}
+
+.countdown-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 400;
+  color: var(--gold);
+  position: relative; z-index: 1;
+}
+
+/* ── CANCEL BUTTON ──────────────────────────────────────────────────────────── */
+.cancel-processing-btn {
+  background: none;
+  border: 1px solid rgba(229,85,85,0.5);
+  color: #e55;
+  padding: 10px 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s;
+}
+.cancel-processing-btn:hover {
+  background: rgba(229,85,85,0.08);
+  border-color: #e55;
+}
+
+.processing-note {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px; color: var(--grey2);
+  letter-spacing: 0.08em;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── ADDRESS OPTIONS ────────────────────────────────────────────────────────── */
+.address-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--goldline);
+  border: 1px solid var(--goldline);
+  margin-top: 10px;
+}
+
+.address-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--black3);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.address-option:hover { background: var(--black2); }
+
+.address-option.selected {
+  background: var(--golddim);
+  border-left: 2px solid var(--gold);
+}
+
+.address-option input[type="radio"] {
+  margin-top: 3px;
+  accent-color: var(--gold);
+  flex-shrink: 0;
+}
+
+.address-option-content { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+
+.address-option-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.address-option-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.address-option-default {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  background: var(--golddim);
+  color: var(--gold);
+  border: 1px solid var(--goldline);
+}
+
+.address-option-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  color: var(--grey1);
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+.address-option-new .address-option-label {
+  color: var(--gold);
+  font-weight: 400;
+}
+
+/* Manage link */
+.manage-addresses-link {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  color: var(--grey2);
+  text-decoration: none;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.manage-addresses-link:hover { color: var(--gold); }
+
+/* Selected address preview */
+.selected-address-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--black3);
+  border: 1px solid var(--goldline);
+  padding: 12px 16px;
+  margin-top: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  color: var(--grey1);
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+}
+
+.selected-address-preview svg { flex-shrink: 0; margin-top: 2px; color: var(--gold); }
+.selected-address-preview strong { color: var(--white); font-weight: 500; }
+
+/* Detail rule */
+.detail-rule {
+  height: 1px;
+  background: var(--goldline);
+  margin: 4px 0;
+}
+
+/* ── ADDRESS VALIDATION ─────────────────────────────────────────────────────── */
+.address-input-wrap { display: flex; flex-direction: column; gap: 8px; }
+
+/* Textarea state borders */
+.form-input.input-valid {
+  border-color: rgba(76,175,80,0.6);
+}
+.form-input.input-error {
+  border-color: rgba(229,85,85,0.6);
+}
+
+/* Character count + PIN status row */
+.address-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* PIN detected badge */
+.pin-detected {
+  display: flex; align-items: center; gap: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px; letter-spacing: 0.1em;
+  color: #4caf50;
+}
+
+.pin-missing {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px; letter-spacing: 0.1em;
+  color: var(--grey2);
+}
+
+/* Error message below textarea */
+.address-error-msg {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(229,85,85,0.08);
+  border: 1px solid rgba(229,85,85,0.3);
+  color: #e55;
+  padding: 8px 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px; letter-spacing: 0.03em;
+  line-height: 1.5;
+}
+
+/* Validation checklist */
+.validation-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background: var(--black3);
+  border: 1px solid var(--grey3);
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--grey2);
+  transition: color 0.2s;
+}
+
+.check-item.check-pass { color: #4caf50; }
+
+.check-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--grey3);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.check-item.check-pass .check-dot {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
+/* Format hint */
+.address-format-hint {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  color: var(--grey2);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  padding: 10px 14px;
+  background: var(--black3);
+  border: 1px solid var(--grey3);
+}
+
+.address-format-example {
+  color: var(--grey2);
+  font-style: italic;
+  font-size: 8.5px;
+}
+
+/* ── SEPARATE ADDRESS FIELDS ────────────────────────────────────────────────── */
+.address-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.addr-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 560px) { .addr-row-2 { grid-template-columns: 1fr; } }
+
+.addr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.addr-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px; font-weight: 500;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--grey2);
+}
+
+.addr-input {
+  background: var(--black3);
+  border: 1px solid var(--grey3);
+  color: var(--white);
+  padding: 11px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; letter-spacing: 0.03em;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.addr-input::placeholder { color: var(--grey2); font-size: 11px; }
+.addr-input:focus        { outline: none; border-color: var(--gold); }
+
+/* Valid field — green border */
+.addr-input.field-valid {
+  border-color: rgba(76,175,80,0.6);
+}
+
+/* Error field — red border */
+.addr-input.field-error {
+  border-color: rgba(229,85,85,0.6);
+}
+
+/* Per-field error message */
+.field-error-msg {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px; color: #e55;
+  letter-spacing: 0.04em; line-height: 1.4;
+}
+
+/* ── STATE AUTOCOMPLETE ──────────────────────────────────────────────────────── */
+.addr-state-wrap { position: relative; }
+
+.state-suggestions {
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  background: var(--black3);
+  border: 1px solid var(--goldline);
+  border-top: none;
+  z-index: 100;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.state-suggestion-item {
+  display: block; width: 100%;
+  text-align: left;
+  background: none; border: none;
+  padding: 10px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px; color: var(--grey1);
+  letter-spacing: 0.04em;
+  cursor: pointer; transition: background 0.15s;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.state-suggestion-item:hover { background: var(--golddim); color: var(--gold); }
+.state-suggestion-item:last-child { border-bottom: none; }
+
+/* ── COMPOSED ADDRESS PREVIEW ───────────────────────────────────────────────── */
+.composed-preview {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: rgba(76,175,80,0.06);
+  border: 1px solid rgba(76,175,80,0.25);
+  padding: 12px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; color: var(--grey1);
+  letter-spacing: 0.03em; line-height: 1.6;
+}
+
+.composed-preview svg { flex-shrink: 0; margin-top: 2px; color: #4caf50; }

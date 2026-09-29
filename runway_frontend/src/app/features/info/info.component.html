@@ -1,0 +1,718 @@
+<div class="info-page">
+
+    <!-- ── PAGE HEADER ────────────────────────────────── -->
+    <div class="info-header">
+        <span class="eyebrow">RunWay</span>
+        <h1 class="info-title">Information</h1>
+        <p class="info-sub">Everything you need to know, in one place.</p>
+    </div>
+
+    <!-- ── NAV ANCHORS ───────────────────────────────── -->
+    <nav class="info-nav">
+        <a href="/info#sizing"         class="info-nav-link" [class.active]="activeSection() === 'sizing'">Sizing Guide</a>
+        <a href="/info#delivery"       class="info-nav-link" [class.active]="activeSection() === 'delivery'">Delivery</a>
+        <a href="/info#returns"        class="info-nav-link" [class.active]="activeSection() === 'returns'">Returns</a>
+        <a href="/info#faq"            class="info-nav-link" [class.active]="activeSection() === 'faq'">FAQ</a>
+        <a href="/info#sustainability" class="info-nav-link" [class.active]="activeSection() === 'sustainability'">Sustainability</a>
+        <a href="/info#careers"        class="info-nav-link" [class.active]="activeSection() === 'careers'">Careers</a>
+        <a href="/info#press"          class="info-nav-link" [class.active]="activeSection() === 'press'">Press</a>
+        <a href="/info#privacy"        class="info-nav-link" [class.active]="activeSection() === 'privacy'">Privacy Policy</a>
+        <a href="/info#terms"          class="info-nav-link" [class.active]="activeSection() === 'terms'">Terms of Service</a>
+    </nav>
+
+    <!-- ── SIZING GUIDE ──────────────────────────────── -->
+    <section class="info-section" id="sizing">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">Sizing</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Sizing Guide</h2>
+                <p class="section-body">
+                    Our pieces are sized to international luxury standards. We recommend measuring
+                    yourself carefully and referring to the size chart below before placing your order.
+                    If you are between sizes, we advise sizing up — our garments are designed with
+                    tailored silhouettes that are best worn with ease of movement.
+                </p>
+
+                <div class="size-tables">
+                    <div class="size-table-wrap">
+                        <h3 class="size-table-title">Apparel — Women</h3>
+                        <table class="size-table">
+                            <thead>
+                                <tr>
+                                    <th>RunWay</th>
+                                    <th>XS</th>
+                                    <th>S</th>
+                                    <th>M</th>
+                                    <th>L</th>
+                                    <th>XL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>UK</td>
+                                    <td>6</td>
+                                    <td>8</td>
+                                    <td>10</td>
+                                    <td>12</td>
+                                    <td>14</td>
+                                </tr>
+                                <tr>
+                                    <td>EU</td>
+                                    <td>34</td>
+                                    <td>36</td>
+                                    <td>38</td>
+                                    <td>40</td>
+                                    <td>42</td>
+                                </tr>
+                                <tr>
+                                    <td>US</td>
+                                    <td>2</td>
+                                    <td>4</td>
+                                    <td>6</td>
+                                    <td>8</td>
+                                    <td>10</td>
+                                </tr>
+                                <tr>
+                                    <td>Bust (cm)</td>
+                                    <td>80</td>
+                                    <td>84</td>
+                                    <td>88</td>
+                                    <td>92</td>
+                                    <td>96</td>
+                                </tr>
+                                <tr>
+                                    <td>Waist (cm)</td>
+                                    <td>60</td>
+                                    <td>64</td>
+                                    <td>68</td>
+                                    <td>72</td>
+                                    <td>76</td>
+                                </tr>
+                                <tr>
+                                    <td>Hip (cm)</td>
+                                    <td>86</td>
+                                    <td>90</td>
+                                    <td>94</td>
+                                    <td>98</td>
+                                    <td>102</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="size-table-wrap">
+                        <h3 class="size-table-title">Apparel — Men</h3>
+                        <table class="size-table">
+                            <thead>
+                                <tr>
+                                    <th>RunWay</th>
+                                    <th>S</th>
+                                    <th>M</th>
+                                    <th>L</th>
+                                    <th>XL</th>
+                                    <th>XXL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>UK/EU</td>
+                                    <td>36</td>
+                                    <td>38</td>
+                                    <td>40</td>
+                                    <td>42</td>
+                                    <td>44</td>
+                                </tr>
+                                <tr>
+                                    <td>Chest (cm)</td>
+                                    <td>88</td>
+                                    <td>92</td>
+                                    <td>96</td>
+                                    <td>100</td>
+                                    <td>104</td>
+                                </tr>
+                                <tr>
+                                    <td>Waist (cm)</td>
+                                    <td>74</td>
+                                    <td>78</td>
+                                    <td>82</td>
+                                    <td>86</td>
+                                    <td>90</td>
+                                </tr>
+                                <tr>
+                                    <td>Shoulder (cm)</td>
+                                    <td>42</td>
+                                    <td>44</td>
+                                    <td>46</td>
+                                    <td>48</td>
+                                    <td>50</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="size-table-wrap">
+                        <h3 class="size-table-title">Footwear</h3>
+                        <table class="size-table">
+                            <thead>
+                                <tr>
+                                    <th>RunWay</th>
+                                    <th>35</th>
+                                    <th>36</th>
+                                    <th>37</th>
+                                    <th>38</th>
+                                    <th>39</th>
+                                    <th>40</th>
+                                    <th>41</th>
+                                    <th>42</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>UK</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <td>6</td>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                </tr>
+                                <tr>
+                                    <td>US W</td>
+                                    <td>5</td>
+                                    <td>6</td>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                    <td>10</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                </tr>
+                                <tr>
+                                    <td>US M</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>6</td>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                </tr>
+                                <tr>
+                                    <td>Foot (cm)</td>
+                                    <td>22.5</td>
+                                    <td>23</td>
+                                    <td>23.5</td>
+                                    <td>24</td>
+                                    <td>24.5</td>
+                                    <td>25</td>
+                                    <td>25.5</td>
+                                    <td>26</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-note">
+                    <span class="note-icon">◈</span>
+                    <p>
+                        All measurements are body measurements, not garment measurements.
+                        If you require assistance with sizing, our concierge team is available
+                        via the support portal.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── DELIVERY ───────────────────────────────────── -->
+    <section class="info-section" id="delivery">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">Delivery</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Delivery</h2>
+                <p class="section-body">
+                    Every RunWay order is packaged by hand and dispatched within
+                    one business day of payment confirmation. We partner exclusively
+                    with premium carriers to ensure your pieces arrive in the condition
+                    in which they left us.
+                </p>
+
+                <div class="delivery-grid">
+                    <div class="delivery-card">
+                        <span class="delivery-type">Standard Delivery</span>
+                        <span class="delivery-time">3 — 5 Business Days</span>
+                        <span class="delivery-price">₹499</span>
+                        <p class="delivery-desc">
+                            Available across India. Tracked from dispatch to door.
+                        </p>
+                    </div>
+                    <div class="delivery-card delivery-card-featured">
+                        <span class="delivery-badge">Complimentary</span>
+                        <span class="delivery-type">Express Delivery</span>
+                        <span class="delivery-time">1 — 2 Business Days</span>
+                        <span class="delivery-price">Free on orders above ₹5,000</span>
+                        <p class="delivery-desc">
+                            Priority handling, signature required on delivery,
+                            full insurance included.
+                        </p>
+                    </div>
+                    <div class="delivery-card">
+                        <span class="delivery-type">International</span>
+                        <span class="delivery-time">7 — 14 Business Days</span>
+                        <span class="delivery-price">Calculated at checkout</span>
+                        <p class="delivery-desc">
+                            Delivered to over 40 countries. All duties and taxes
+                            are the responsibility of the recipient.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="info-note">
+                    <span class="note-icon">◈</span>
+                    <p>
+                        Orders placed before 12:00 PM IST on business days are dispatched
+                        the same day. All shipments include a tracking number sent to your
+                        registered email address.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── RETURNS ────────────────────────────────────── -->
+    <section class="info-section" id="returns">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">Returns</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Returns & Exchanges</h2>
+                <p class="section-body">
+                    We want you to love every piece you receive from RunWay.
+                    If for any reason you do not, we offer a straightforward
+                    28-day return policy — no questions asked.
+                </p>
+
+                <div class="returns-steps">
+                    <div class="return-step">
+                        <span class="step-num">01</span>
+                        <div class="step-content">
+                            <h4 class="step-title">Initiate Return</h4>
+                            <p class="step-desc">
+                                Log in to your account, navigate to your orders, and select
+                                the item you wish to return. A return label will be emailed
+                                to you within 24 hours.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="return-step">
+                        <span class="step-num">02</span>
+                        <div class="step-content">
+                            <h4 class="step-title">Package Your Return</h4>
+                            <p class="step-desc">
+                                Items must be returned in their original condition — unworn,
+                                with all tags attached, in original packaging. Footwear must
+                                include its original box.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="return-step">
+                        <span class="step-num">03</span>
+                        <div class="step-content">
+                            <h4 class="step-title">Drop Off or Collect</h4>
+                            <p class="step-desc">
+                                Drop your parcel at any registered courier point, or schedule
+                                a complimentary collection from your address. We cover all
+                                return shipping costs.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="return-step">
+                        <span class="step-num">04</span>
+                        <div class="step-content">
+                            <h4 class="step-title">Refund Processed</h4>
+                            <p class="step-desc">
+                                Once your return is received and inspected, your refund will
+                                be processed within 5 — 7 business days to your original
+                                payment method.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-note">
+                    <span class="note-icon">◈</span>
+                    <p>
+                        Sale items and bespoke/made-to-order pieces are final sale
+                        and cannot be returned or exchanged.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FAQ ───────────────────────────────────────── -->
+    <section class="info-section" id="faq">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">FAQ</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+
+                <div class="faq-list">
+                    @for (item of faqs; track item.q) {
+                    <div class="faq-item" [class.open]="item.open" (click)="item.open = !item.open">
+                        <div class="faq-question">
+                            <span>{{ item.q }}</span>
+                            <span class="faq-icon">{{ item.open ? '−' : '+' }}</span>
+                        </div>
+                        @if (item.open) {
+                        <div class="faq-answer">{{ item.a }}</div>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── SUSTAINABILITY ─────────────────────────────── -->
+    <section class="info-section" id="sustainability">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">Planet</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Sustainability</h2>
+                <p class="section-body">
+                    Luxury and responsibility are not mutually exclusive.
+                    At RunWay, we believe the most sustainable garment is one
+                    made to last a lifetime — and we curate accordingly.
+                </p>
+
+                <div class="sustain-grid">
+                    <div class="sustain-card">
+                        <span class="sustain-icon">◈</span>
+                        <h4 class="sustain-title">Slow Curation</h4>
+                        <p class="sustain-desc">
+                            We do not add pieces seasonally. Each addition to our
+                            catalogue is deliberate and permanent, rejecting the
+                            cycle of fast consumption.
+                        </p>
+                    </div>
+                    <div class="sustain-card">
+                        <span class="sustain-icon">◈</span>
+                        <h4 class="sustain-title">Responsible Packaging</h4>
+                        <p class="sustain-desc">
+                            All RunWay packaging is made from recycled and FSC-certified
+                            materials. Our signature boxes are designed to be kept
+                            and reused.
+                        </p>
+                    </div>
+                    <div class="sustain-card">
+                        <span class="sustain-icon">◈</span>
+                        <h4 class="sustain-title">Carbon Offset</h4>
+                        <p class="sustain-desc">
+                            We offset 100% of our delivery emissions through verified
+                            reforestation projects in partnership with certified
+                            environmental organisations.
+                        </p>
+                    </div>
+                    <div class="sustain-card">
+                        <span class="sustain-icon">◈</span>
+                        <h4 class="sustain-title">Designer Standards</h4>
+                        <p class="sustain-desc">
+                            Every house on RunWay is vetted for ethical labour practices,
+                            material sourcing transparency, and responsible production
+                            volumes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CAREERS ────────────────────────────────────── -->
+    <section class="info-section" id="careers">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">Careers</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Careers</h2>
+                <p class="section-body">
+                    RunWay is built by a small team of people who believe deeply in what
+                    they are creating. We are not a startup chasing scale — we are a house
+                    building something enduring. If that resonates with you, we would like
+                    to hear from you.
+                </p>
+
+                <div class="careers-list">
+                    <div class="career-item">
+                        <div class="career-info">
+                            <h4 class="career-title">Curation Specialist</h4>
+                            <span class="career-type">Full-time · Remote</span>
+                        </div>
+                        <span class="career-status open">Open</span>
+                    </div>
+                    <div class="career-item">
+                        <div class="career-info">
+                            <h4 class="career-title">Senior Frontend Engineer</h4>
+                            <span class="career-type">Full-time · Hybrid</span>
+                        </div>
+                        <span class="career-status open">Open</span>
+                    </div>
+                    <div class="career-item">
+                        <div class="career-info">
+                            <h4 class="career-title">Brand Partnerships Lead</h4>
+                            <span class="career-type">Full-time · Mumbai</span>
+                        </div>
+                        <span class="career-status open">Open</span>
+                    </div>
+                    <div class="career-item">
+                        <div class="career-info">
+                            <h4 class="career-title">Customer Experience Manager</h4>
+                            <span class="career-type">Full-time · Remote</span>
+                        </div>
+                        <span class="career-status closed">Filled</span>
+                    </div>
+                </div>
+
+                <div class="info-note">
+                    <span class="note-icon">◈</span>
+                    <p>
+                        To apply for any position, write to us at
+                        <span class="note-gold">careers&#64;runway.in</span> with your
+                        portfolio or CV. We read every submission personally.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── PRESS ──────────────────────────────────────── -->
+    <section class="info-section" id="press">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">Press</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Press & Media</h2>
+                <p class="section-body">
+                    For editorial features, interview requests, product loans,
+                    and all press enquiries, please contact our communications team.
+                    We welcome collaborations with publications that share our
+                    commitment to considered, long-form fashion journalism.
+                </p>
+
+                <div class="press-grid">
+                    <div class="press-card">
+                        <h4 class="press-type">Editorial Requests</h4>
+                        <p class="press-desc">
+                            Product loans for shoots, look book collaborations,
+                            and editorial features.
+                        </p>
+                        <span class="press-contact">press&#64;runway.in</span>
+                    </div>
+                    <div class="press-card">
+                        <h4 class="press-type">Interviews & Features</h4>
+                        <p class="press-desc">
+                            Founder interviews, brand stories, and documentary
+                            access requests.
+                        </p>
+                        <span class="press-contact">media&#64;runway.in</span>
+                    </div>
+                    <div class="press-card">
+                        <h4 class="press-type">Brand Assets</h4>
+                        <p class="press-desc">
+                            Official logos, brand guidelines, and photography
+                            available on request.
+                        </p>
+                        <span class="press-contact">assets&#64;runway.in</span>
+                    </div>
+                </div>
+
+                <div class="info-note">
+                    <span class="note-icon">◈</span>
+                    <p>
+                        All press enquiries are responded to within two business days.
+                        We do not participate in paid editorial placements.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ── PRIVACY POLICY ─────────────────────────────── -->
+    <section class="info-section" id="privacy">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">Privacy</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Privacy Policy</h2>
+                <p class="section-body">
+                    At RunWay, your privacy is not a compliance checkbox — it is a commitment.
+                    This policy explains what information we collect, how we use it,
+                    and the choices you have.
+                </p>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Information We Collect</h3>
+                    <p class="policy-body">
+                        We collect information you provide directly — your name, email address,
+                        shipping address, and payment details when you place an order or create
+                        an account. We also collect usage data (pages visited, time spent,
+                        device type) to improve the platform experience.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">How We Use Your Information</h3>
+                    <p class="policy-body">
+                        Your information is used exclusively to fulfil your orders, communicate
+                        with you about your purchases, and improve our services. We do not sell,
+                        rent, or share your personal data with third parties for marketing purposes.
+                        Ever.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Cookies</h3>
+                    <p class="policy-body">
+                        We use essential cookies to maintain your session and cart. We use
+                        analytics cookies (anonymised) to understand how the platform is used.
+                        We do not use advertising or tracking cookies. You may disable cookies
+                        in your browser settings, though some features may not function correctly.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Data Security</h3>
+                    <p class="policy-body">
+                        All data is transmitted over 256-bit SSL encryption. Payment information
+                        is processed by PCI-DSS compliant payment providers and is never stored
+                        on RunWay servers. We conduct regular security audits and penetration
+                        testing.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Your Rights</h3>
+                    <p class="policy-body">
+                        You have the right to access, correct, or delete your personal data
+                        at any time. You may also request a copy of all data we hold about you.
+                        To exercise any of these rights, contact us at
+                        <span class="note-gold">privacy&#64;runway.in</span>.
+                        We will respond within 30 days.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Policy Updates</h3>
+                    <p class="policy-body">
+                        We may update this policy periodically. When we do, we will notify
+                        registered users by email and update the effective date below.
+                        Continued use of RunWay after changes constitutes acceptance of
+                        the revised policy.
+                    </p>
+                </div>
+
+                <div class="info-note">
+                    <span class="note-icon">◈</span>
+                    <p>Effective date: 1 January 2025. Last updated: 1 May 2025.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── TERMS OF SERVICE ────────────────────────────── -->
+    <section class="info-section" id="terms">
+        <div class="info-section-inner">
+            <div class="section-label">
+                <span class="vertical-label">Terms</span>
+            </div>
+            <div class="section-content">
+                <h2 class="section-title">Terms of Service</h2>
+                <p class="section-body">
+                    By accessing or using RunWay, you agree to be bound by these terms.
+                    Please read them carefully. If you do not agree, you may not use the platform.
+                </p>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Eligibility</h3>
+                    <p class="policy-body">
+                        You must be at least 18 years of age to create an account or place an order
+                        on RunWay. By using this platform, you represent that you meet this requirement
+                        and that all information you provide is accurate and complete.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Orders & Payment</h3>
+                    <p class="policy-body">
+                        All orders are subject to product availability and payment verification.
+                        We reserve the right to cancel any order at our discretion, in which case
+                        a full refund will be issued. Prices are displayed in Indian Rupees (INR)
+                        and include applicable taxes unless stated otherwise.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Intellectual Property</h3>
+                    <p class="policy-body">
+                        All content on RunWay — including text, photography, design, logos,
+                        and product descriptions — is the property of RunWay or its licensors
+                        and is protected by applicable intellectual property laws. You may not
+                        reproduce, distribute, or create derivative works without prior written
+                        consent.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">User Conduct</h3>
+                    <p class="policy-body">
+                        You agree not to use RunWay for any unlawful purpose, to impersonate
+                        any person or entity, to submit false or misleading information, or
+                        to interfere with the security or integrity of the platform. Violations
+                        may result in immediate account termination.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Limitation of Liability</h3>
+                    <p class="policy-body">
+                        RunWay shall not be liable for any indirect, incidental, or consequential
+                        damages arising from your use of the platform or the purchase of products.
+                        Our total liability in any matter is limited to the value of the order
+                        in question.
+                    </p>
+                </div>
+
+                <div class="policy-block">
+                    <h3 class="policy-heading">Governing Law</h3>
+                    <p class="policy-body">
+                        These terms are governed by the laws of India. Any disputes arising
+                        shall be subject to the exclusive jurisdiction of the courts of Mumbai,
+                        Maharashtra. We encourage resolution through our support team before
+                        any formal proceedings.
+                    </p>
+                </div>
+
+                <div class="info-note">
+                    <span class="note-icon">◈</span>
+                    <p>Effective date: 1 January 2025. Last updated: 1 May 2025.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

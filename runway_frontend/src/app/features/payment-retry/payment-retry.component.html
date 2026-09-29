@@ -1,0 +1,104 @@
+<div class="payment-page">
+
+  <a [routerLink]="['/orders', orderId()]" class="back-link">← Order Details</a>
+
+  @if (loading()) {
+    <div class="state-message"><div class="spinner"></div></div>
+  }
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  @if (!loading() && order()) {
+
+    <!-- Step: confirm -->
+    @if (step() === 'confirm') {
+      <div class="payment-card">
+        <span class="eyebrow">Retry Payment</span>
+        <h1 class="page-title">Complete Your Order</h1>
+
+        <div class="detail-rule"></div>
+
+        <div class="detail-rows">
+          <div class="detail-row">
+            <span class="detail-key">Order</span>
+            <span class="detail-val">{{ order()!.orderNumber }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Amount due</span>
+            <span class="detail-val amount">
+              {{ order()!.totalAmount | currency:order()!.currency }}
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Status</span>
+            <span class="detail-val">
+              <span class="pay-badge status-pending">PENDING PAYMENT</span>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Items</span>
+            <span class="detail-val">
+              {{ order()!.lines.length }} item{{ order()!.lines.length !== 1 ? 's' : '' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-rule"></div>
+
+        <p class="payment-note">
+          Your order is reserved. Complete payment to confirm your purchase.
+          Cancelling will restore stock.
+        </p>
+
+        <div class="action-row">
+          <button class="btn-primary" (click)="retryPayment()">Pay Now</button>
+          <a [routerLink]="['/orders', orderId()]" class="btn-ghost">Cancel</a>
+        </div>
+      </div>
+    }
+
+    <!-- Step: processing -->
+    @if (step() === 'processing') {
+      <div class="payment-card state-card">
+        <div class="spinner large-spinner"></div>
+        <h2 class="state-title">Processing payment…</h2>
+        <p class="state-sub">Please do not close or refresh this page.</p>
+      </div>
+    }
+
+    <!-- Step: success -->
+    @if (step() === 'success') {
+      <div class="payment-card state-card">
+        <div class="state-icon-wrap success">✓</div>
+        <h2 class="state-title">Payment Confirmed</h2>
+        <p class="state-sub">
+          Order <strong>{{ order()!.orderNumber }}</strong> has been confirmed.
+        </p>
+        @if (paymentIntent()?.razorpayOrderId) {
+          <p class="mono-note">Razorpay: {{ paymentIntent()!.razorpayOrderId }}</p>
+        }
+        <div class="action-row centered">
+          <button class="btn-primary" (click)="goToOrder()">View Order</button>
+          <a routerLink="/orders" class="btn-ghost">All Orders</a>
+        </div>
+      </div>
+    }
+
+    <!-- Step: failed -->
+    @if (step() === 'failed') {
+      <div class="payment-card state-card">
+        <div class="state-icon-wrap failed">✕</div>
+        <h2 class="state-title">Payment Failed</h2>
+        <p class="state-sub">Your payment could not be processed. Your order is still reserved.</p>
+        <div class="action-row centered">
+          <button class="btn-primary" (click)="step.set('confirm')">Try Again</button>
+          <a [routerLink]="['/orders', orderId()]" class="btn-ghost">Back to Order</a>
+        </div>
+      </div>
+    }
+
+  }
+
+</div>

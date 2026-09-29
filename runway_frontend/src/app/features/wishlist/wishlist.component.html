@@ -1,0 +1,71 @@
+<div class="wishlist-page">
+
+  <div class="wishlist-header">
+    <span class="eyebrow">My Account</span>
+    <h1 class="wishlist-title">Wishlist</h1>
+    @if (!loading()) {
+      <p class="wishlist-count">
+        {{ products().length }} {{ products().length === 1 ? 'piece' : 'pieces' }} saved
+      </p>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="wishlist-grid">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="skeleton-card"></div>
+      }
+    </div>
+  } @else if (products().length === 0) {
+    <div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="1">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
+                 a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+                 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <h2 class="empty-title">Your wishlist is empty</h2>
+      <p class="empty-sub">Save pieces you love and find them here.</p>
+      <button class="btn-explore" (click)="router.navigate(['/category/all'])">
+        Explore Collection
+      </button>
+    </div>
+  } @else {
+    <div class="wishlist-grid">
+      @for (product of products(); track product.id) {
+        <div class="wishlist-card">
+          <div class="card-img-wrap" (click)="goToProduct(product.id)">
+            <img
+              [src]="getPrimaryImage(product.media)"
+              [alt]="product.title"
+              class="card-img">
+            <div class="card-overlay">
+              <span>View Product</span>
+            </div>
+          </div>
+          <div class="card-info">
+            <span class="card-sku">{{ product.sku }}</span>
+            <h3 class="card-title" (click)="goToProduct(product.id)">
+              {{ product.title }}
+            </h3>
+            <span class="card-price">
+              {{ product.currency }} {{ product.price | number:'1.0-0' }}
+            </span>
+            <div class="card-actions">
+              <button class="btn-view" (click)="goToProduct(product.id)">
+                View Product
+              </button>
+              <button
+                class="btn-remove"
+                [disabled]="removing() === product.id"
+                (click)="removeItem(product.id, product.title)">
+                @if (removing() === product.id) { ... } @else { ✕ }
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

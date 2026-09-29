@@ -1,0 +1,664 @@
+<div class="dashboard" [class.sidebar-collapsed]="!sidebarOpen()">
+
+    <!-- ── SIDEBAR ──────────────────────────────────── -->
+    <aside class="sidebar" [class.open]="sidebarOpen()">
+
+        <!-- Brand -->
+        <div class="sidebar-brand">
+            @if (sidebarOpen()) {
+            <span class="brand-text">RunWay</span>
+            <span class="brand-role">Seller Portal</span>
+            }
+            <button class="sidebar-toggle" (click)="toggleSidebar()">
+                @if (sidebarOpen()) {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                } @else {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                }
+            </button>
+        </div>
+
+        <!-- User info -->
+        @if (sidebarOpen() && userDetails()) {
+        <div class="sidebar-user">
+            <div class="user-avatar">
+                {{ userDetails().name?.charAt(0)?.toUpperCase() }}
+            </div>
+            <div class="user-info">
+                <span class="user-name">{{ userDetails().name }}</span>
+                <span class="user-email">{{ userDetails().email }}</span>
+            </div>
+        </div>
+        }
+
+        <!-- Nav -->
+        <nav class="sidebar-nav">
+            <button class="nav-item" [class.active]="activeSection() === 'overview'" (click)="setSection('overview')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                @if (sidebarOpen()) { <span>Overview</span> }
+            </button>
+
+            <button class="nav-item" [class.active]="activeSection() === 'products'" (click)="setSection('products')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" stroke="currentColor"
+                        stroke-width="1.5" />
+                    <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                @if (sidebarOpen()) { <span>My Products</span> }
+            </button>
+
+            <button class="nav-item" [class.active]="activeSection() === 'inventory'" (click)="setSection('inventory')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                @if (sidebarOpen()) {
+                <span>Inventory</span>
+                @if (lowStockProducts().length > 0) {
+                <span class="nav-badge">{{ lowStockProducts().length }}</span>
+                }
+                }
+            </button>
+
+            <button class="nav-item" [class.active]="activeSection() === 'account'" (click)="setSection('account')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" />
+                </svg>
+                @if (sidebarOpen()) { <span>Account</span> }
+            </button>
+        </nav>
+
+        <!-- Logout -->
+        <button class="sidebar-logout" (click)="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            @if (sidebarOpen()) { <span>Sign Out</span> }
+        </button>
+
+    </aside>
+
+    <!-- ── MAIN CONTENT ──────────────────────────────── -->
+    <main class="main">
+
+        <!-- ── OVERVIEW ─────────────────────────────────── -->
+        @if (activeSection() === 'overview') {
+        <div class="section">
+            <div class="section-header">
+                <h1 class="section-title">Overview</h1>
+                <p class="section-sub">Welcome back, {{ userDetails()?.name ?? 'Seller' }}</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Total Products</span>
+                    <span class="stat-value">{{ myProducts().length }}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Low Stock</span>
+                    <span class="stat-value warn">{{ lowStockProducts().length }}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Out of Stock</span>
+                    <span class="stat-value danger">
+                        {{ myProducts().filter(p => getStockStatus(p.id) === 'out').length }}
+                    </span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Seller ID</span>
+                    <span class="stat-value">{{ sellerId() }}</span>
+                </div>
+            </div>
+
+            <!-- Low stock alert -->
+            @if (lowStockProducts().length > 0) {
+            <div class="alert-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <div>
+                    <p class="alert-title">Low Stock Alert</p>
+                    <p class="alert-sub">
+                        {{ lowStockProducts().length }} product(s) have 5 or fewer units remaining.
+                        <button class="alert-link" (click)="setSection('inventory')">Update inventory →</button>
+                    </p>
+                </div>
+            </div>
+            }
+
+            <!-- Recent products -->
+            <div class="overview-products">
+                <div class="overview-products-header">
+                    <h2 class="subsection-title">Recent Products</h2>
+                    <button class="btn-text" (click)="setSection('products')">View all →</button>
+                </div>
+                @if (loadingProducts()) {
+                <div class="table-skeleton"></div>
+                } @else {
+                <div class="product-table">
+                    <div class="table-head">
+                        <span>Product</span>
+                        <span>SKU</span>
+                        <span>Price</span>
+                        <span>Stock</span>
+                    </div>
+                    @for (product of myProducts().slice(0, 5); track product.id) {
+                    <div class="table-row">
+                        <div class="table-product">
+                            <img [src]="getPrimaryImage(product.media)" [alt]="product.title" class="table-img">
+                            <span class="table-name">{{ product.title }}</span>
+                        </div>
+                        <span class="table-sku">{{ product.sku }}</span>
+                        <span class="table-price">₹{{ product.price | number:'1.0-0' }}</span>
+                        <span class="stock-badge" [class]="getStockStatus(product.id)">
+                            {{ getStockQty(product.id) }} units
+                        </span>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- ── MY PRODUCTS ───────────────────────────────── -->
+        @if (activeSection() === 'products') {
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">My Products</h1>
+                    <p class="section-sub">{{ myProducts().length }} products listed</p>
+                </div>
+                <button class="btn-primary" (click)="openCreateModal()">
+                    + Add Product
+                </button>
+            </div>
+
+            @if (loadingProducts()) {
+            <div class="table-skeleton"></div>
+            } @else if (myProducts().length === 0) {
+            <div class="empty-state">
+                <p class="empty-title">No products yet</p>
+                <p class="empty-sub">Start by adding your first product</p>
+                <button class="btn-primary" (click)="openCreateModal()">+ Add Product</button>
+            </div>
+            } @else {
+            <div class="product-table">
+                <div class="table-head">
+                    <span>Product</span>
+                    <span>SKU</span>
+                    <span>Category</span>
+                    <span>Price</span>
+                    <span>Stock</span>
+                    <span>Actions</span>
+                </div>
+                @for (product of myProducts(); track product.id) {
+                <div class="table-row">
+                    <div class="table-product">
+                        <img [src]="getPrimaryImage(product.media)" [alt]="product.title" class="table-img">
+                        <span class="table-name">{{ product.title }}</span>
+                    </div>
+                    <span class="table-sku">{{ product.sku }}</span>
+                    <span class="table-cat">{{ product.categoryId }}</span>
+                    <span class="table-price">₹{{ product.price | number:'1.0-0' }}</span>
+                    <span class="stock-badge" [class]="getStockStatus(product.id)">
+                        {{ getStockQty(product.id) }} units
+                    </span>
+                    <div class="table-actions">
+                        <button class="action-btn edit" (click)="openEditModal(product)">Edit</button>
+                        <button class="action-btn inv" (click)="openInvModal(product)">Stock</button>
+                        <button class="action-btn delete" (click)="openDeleteModal(product)">Delete</button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+
+        <!-- ── INVENTORY ─────────────────────────────────── -->
+        @if (activeSection() === 'inventory') {
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Inventory</h1>
+                    <p class="section-sub">Manage stock levels for your products</p>
+                </div>
+            </div>
+
+            @if (loadingProducts()) {
+            <div class="table-skeleton"></div>
+            } @else {
+            <div class="product-table">
+                <div class="table-head">
+                    <span>Product</span>
+                    <span>SKU</span>
+                    <span>Current Stock</span>
+                    <span>Status</span>
+                    <span>Action</span>
+                </div>
+                @for (product of myProducts(); track product.id) {
+                <div class="table-row">
+                    <div class="table-product">
+                        <img [src]="getPrimaryImage(product.media)" [alt]="product.title" class="table-img">
+                        <span class="table-name">{{ product.title }}</span>
+                    </div>
+                    <span class="table-sku">{{ product.sku }}</span>
+                    <span class="table-stock">{{ getStockQty(product.id) }}</span>
+                    <span class="stock-badge" [class]="getStockStatus(product.id)">
+                        @if (getStockStatus(product.id) === 'out') { Out of Stock }
+                        @else if (getStockStatus(product.id) === 'low') { Low Stock }
+                        @else { In Stock }
+                    </span>
+                    <button class="action-btn inv" (click)="openInvModal(product)">
+                        Update Stock
+                    </button>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+
+        <!-- ── ACCOUNT ───────────────────────────────────── -->
+        @if (activeSection() === 'account') {
+        <div class="section">
+            <div class="section-header">
+                <h1 class="section-title">Account</h1>
+            </div>
+
+            @if (loadingUser()) {
+            <div class="table-skeleton"></div>
+            } @else if (userDetails()) {
+            <div class="account-card">
+                <div class="account-avatar">
+                    {{ userDetails().name?.charAt(0)?.toUpperCase() }}
+                </div>
+                <div class="account-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Full Name</span>
+                        <span class="detail-value">{{ userDetails().name }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Username</span>
+                        <span class="detail-value">{{ userDetails().username }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ userDetails().email }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Gender</span>
+                        <span class="detail-value">{{ userDetails().gender }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Role</span>
+                        <span class="detail-value">
+                            <span class="role-badge">{{ userDetails().roles?.[0] }}</span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Seller ID</span>
+                        <span class="detail-value">#{{ userDetails().user_id }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-zone">
+                <h3 class="danger-title">Danger Zone</h3>
+                <p class="danger-sub">Once you delete your account, there is no going back.</p>
+                <button class="btn-danger" (click)="showDeleteAccountModal.set(true)">
+                    Delete Account
+                </button>
+            </div>
+            }
+        </div>
+        }
+
+    </main>
+</div>
+
+<!-- ── CREATE PRODUCT MODAL ──────────────────────── -->
+@if (showCreateModal()) {
+<div class="modal-backdrop" (click)="showCreateModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Add New Product</h2>
+            <button class="modal-close" (click)="showCreateModal.set(false)">✕</button>
+        </div>
+
+        @if (modalError()) {
+        <div class="modal-error">{{ modalError() }}</div>
+        }
+        @if (modalSuccess()) {
+        <div class="modal-success">{{ modalSuccess() }}</div>
+        }
+
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Title <span class="req">*</span></label>
+                    <input class="form-input" [(ngModel)]="createForm.title" placeholder="Product title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">SKU <span class="req">*</span></label>
+                    <input class="form-input" [(ngModel)]="createForm.sku" placeholder="e.g. APP-015">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-input form-textarea" [(ngModel)]="createForm.description"
+                    placeholder="Product description" rows="3"></textarea>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Price (INR) <span class="req">*</span></label>
+                    <input class="form-input" type="number" [(ngModel)]="createForm.price" placeholder="0">
+                    @if(priceInvalid()){
+                    <div class="modal-error-price">
+                        {{ invalidPriceMsg }}
+                    </div>
+                    }
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category <span class="req">*</span></label>
+                    <rw-select
+                        placeholder="Select category"
+                        [options]="childCategoryOpts"
+                        [(ngModel)]="createForm.categoryId">
+                    </rw-select>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <rw-select
+                        placeholder="Select"
+                        [options]="genderOpts"
+                        [(ngModel)]="createForm.gender">
+                    </rw-select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Material</label>
+                    <input class="form-input" [(ngModel)]="createForm.material" placeholder="e.g. Pure Silk">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Color</label>
+                    <input class="form-input" [(ngModel)]="createForm.color" placeholder="e.g. Black & Gold">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Occasion</label>
+                    <input class="form-input" [(ngModel)]="createForm.occasion" placeholder="e.g. Formal">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Sizes <span class="form-hint">(comma separated)</span></label>
+                    <input class="form-input" [(ngModel)]="createForm.size" placeholder="e.g. S, M, L, XL">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Initial Stock</label>
+                    <input class="form-input" type="number" [(ngModel)]="createForm.stock" placeholder="0">
+                    @if(quantityInvalid()){
+                    <div class="modal-error-price">
+                        {{ invalidQuantityMsg }}
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Product Images</label>
+                <div class="file-upload" (click)="fileInput.click()">
+                    <input #fileInput type="file" multiple accept="image/*" style="display:none"
+                        (change)="onFileSelect($event)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span>Click to upload images</span>
+                </div>
+
+                <!-- Image previews -->
+                @if (createForm.files.length > 0) {
+                <div class="img-preview-grid">
+                    @for (file of createForm.files; track $index) {
+                    <div class="img-preview-wrap">
+                        <img [src]="getPreviewUrl(file)" class="img-preview">
+                        <button class="img-remove" (click)="removeFile($index)">✕</button>
+                        <span class="img-name">{{ file.name }}</span>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showCreateModal.set(false)">Cancel</button>
+            <button class="btn-primary" [disabled]="modalLoading()" (click)="submitCreateProduct()">
+                @if (modalLoading()) { Creating... } @else { Create Product }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- ── EDIT MODAL ─────────────────────────────────── -->
+@if (showEditModal()) {
+<div class="modal-backdrop" (click)="showEditModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Edit Product</h2>
+            <button class="modal-close" (click)="showEditModal.set(false)">✕</button>
+        </div>
+
+        @if (modalError()) { <div class="modal-error">{{ modalError() }}</div> }
+        @if (modalSuccess()) { <div class="modal-success">{{ modalSuccess() }}</div> }
+
+        <div class="modal-body">
+
+            <!-- Product details -->
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input class="form-input" [(ngModel)]="editForm.title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">SKU</label>
+                    <input class="form-input" [(ngModel)]="editForm.sku">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-input form-textarea" [(ngModel)]="editForm.description" rows="3"></textarea>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Price (INR)</label>
+                    <input class="form-input" type="number" [(ngModel)]="editForm.price">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <rw-select
+                        placeholder="Select category"
+                        [options]="childCategoryOpts"
+                        [(ngModel)]="editForm.categoryId">
+                    </rw-select>
+                </div>
+            </div>
+
+            <!-- Existing images -->
+            <div class="form-group">
+                <label class="form-label">Current Images</label>
+                @if (selectedProduct()!.media?.length === 0) {
+                <p class="form-hint" style="color: var(--grey2); font-size: 10px;">No images uploaded yet.</p>
+                } @else {
+                <div class="img-preview-grid">
+                    @for (media of selectedProduct()!.media; track media.id) {
+                    <div class="img-preview-wrap">
+                        <img [src]="media.fullUrl" class="img-preview">
+                        @if (media.isPrimary) {
+                        <span class="img-primary-badge">Primary</span>
+                        }
+                        <button class="img-remove" (click)="deleteProductImage(media.id)"
+                            [disabled]="deletingImageId() === media.id">
+                            @if (deletingImageId() === media.id) { ... } @else { ✕ }
+                        </button>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Add more images -->
+            <div class="form-group">
+                <label class="form-label">Add More Images</label>
+                <div class="file-upload" (click)="editFileInput.click()">
+                    <input #editFileInput type="file" multiple accept="image/*" style="display:none"
+                        (change)="onEditFileSelect($event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    @if (editFiles.length === 0) {
+                    <span>Click to upload more images</span>
+                    } @else {
+                    <span>{{ editFiles.length }} new file(s) selected</span>
+                    }
+                </div>
+
+                @if (editFiles.length > 0) {
+                <div class="img-preview-grid" style="margin-top: 10px">
+                    @for (file of editFiles; track $index) {
+                    <div class="img-preview-wrap">
+                        <img [src]="editPreviewUrls[$index]" class="img-preview">
+                        <button class="img-remove" (click)="removeEditFile($index)">✕</button>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showEditModal.set(false)">Cancel</button>
+            <button class="btn-primary" [disabled]="modalLoading()" (click)="submitEditProduct()">
+                @if (modalLoading()) { Saving... } @else { Save Changes }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- ── DELETE MODAL ───────────────────────────────── -->
+@if (showDeleteModal()) {
+<div class="modal-backdrop" (click)="showDeleteModal.set(false)">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Delete Product</h2>
+            <button class="modal-close" (click)="showDeleteModal.set(false)">✕</button>
+        </div>
+        <div class="modal-body">
+            <p class="confirm-text">
+                Are you sure you want to delete
+                <strong>{{ selectedProduct()?.title }}</strong>?
+                This action cannot be undone.
+            </p>
+            @if (modalError()) { <div class="modal-error">{{ modalError() }}</div> }
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showDeleteModal.set(false)">Cancel</button>
+            <button class="btn-danger" [disabled]="modalLoading()" (click)="confirmDelete()">
+                @if (modalLoading()) { Deleting... } @else { Delete }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- ── INVENTORY MODAL ────────────────────────────── -->
+@if (showInvModal()) {
+<div class="modal-backdrop" (click)="showInvModal.set(false)">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Update Stock</h2>
+            <button class="modal-close" (click)="showInvModal.set(false)">✕</button>
+        </div>
+
+        @if (modalError()) { <div class="modal-error">{{ modalError() }}</div> }
+        @if (modalSuccess()) { <div class="modal-success">{{ modalSuccess() }}</div> }
+
+        <div class="modal-body">
+            <p class="confirm-text">{{ selectedProduct()?.title }}</p>
+            <p class="confirm-text" style="color: var(--gold)">
+                Current Stock: {{ getStockQty(selectedProduct()!.id) }}
+            </p>
+            <div class="form-group">
+                <label class="form-label">Operation</label>
+                <div class="operation-row">
+                    @for (op of ['ADD', 'SUBTRACT']; track op) {
+                    <button class="op-btn" [class.active]="invForm.operation === op" (click)="invForm.operation = op">
+                        {{ op }}
+                    </button>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quantity</label>
+                <input class="form-input" type="number" [(ngModel)]="invForm.quantity" min="0">
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showInvModal.set(false)">Cancel</button>
+            <button class="btn-primary" [disabled]="modalLoading()" (click)="submitInventory()">
+                @if (modalLoading()) { Updating... } @else { Update }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- ── DELETE ACCOUNT MODAL ───────────────────────── -->
+@if (showDeleteAccountModal()) {
+<div class="modal-backdrop" (click)="showDeleteAccountModal.set(false)">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Delete Account</h2>
+            <button class="modal-close" (click)="showDeleteAccountModal.set(false)">✕</button>
+        </div>
+        <div class="modal-body">
+            <p class="confirm-text">
+                This will permanently delete your account and all your products.
+                This action <strong>cannot be undone</strong>.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost-sm" (click)="showDeleteAccountModal.set(false)">Cancel</button>
+            <button class="btn-danger" (click)="confirmDeleteAccount()">Delete My Account</button>
+        </div>
+    </div>
+</div>
+}

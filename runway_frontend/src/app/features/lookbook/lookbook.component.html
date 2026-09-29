@@ -1,0 +1,171 @@
+<div class="lookbook-page">
+
+  <!-- ── HEADER ─────────────────────────────────────── -->
+  <div class="lb-header">
+    <span class="lb-eyebrow">RunWay Editorial</span>
+    <h1 class="lb-title">A/W '26 Lookbook</h1>
+    <p class="lb-sub">Dressed for Every Season</p>
+
+    <!-- Top look navigation -->
+    <div class="look-tabs">
+      @for (look of looks; track look.id) {
+        <button class="look-tab" (click)="scrollToLook(look.id)">
+          <span class="look-tab-num">{{ look.id }}</span>
+          <span class="look-tab-name">{{ look.title }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="scroll-hint">
+      <span class="scroll-text">Scroll to explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="lb-loading">
+      <div class="lb-skeleton"></div>
+    </div>
+  } @else {
+
+    <!-- ── OPENING KEYWORD BAND ───────────────────── -->
+    <div class="keyword-band">
+      <div class="keyword-band-inner">
+        <span class="keyword">EDITORIAL</span>
+        <span class="keyword-dot">·</span>
+        <span class="keyword">AUTUMN SUMMER</span>
+        <span class="keyword-dot">·</span>
+        <span class="keyword">2026</span>
+        <span class="keyword-dot">·</span>
+        <span class="keyword">RUNWAY</span>
+      </div>
+    </div>
+
+    <!-- ── LOOKS ──────────────────────────────────── -->
+    @for (look of looks; track look.id; let i = $index; let last = $last) {
+
+      <section
+        class="look-section"
+        [class.look-reverse]="i % 2 !== 0"
+        [id]="'look-' + look.id">
+
+        <!-- ── IMAGE PANEL ─────────────────────────── -->
+        <div class="look-image-panel">
+          <div class="look-image-frame">
+
+            <!-- Auto-cycling image -->
+            <div class="look-image-container">
+              @if (getActiveImage(look)) {
+                <img
+                  [src]="getActiveImage(look)"
+                  [alt]="look.title"
+                  class="look-img"
+                  [class]="'look-img img-key-' + look.activeImageIndex">
+                  
+              } @else {
+                <div class="look-img-placeholder"></div>
+              }
+            </div>
+
+            <!-- Image dots indicator -->
+            @if (getImageDots(look).length > 1) {
+              <div class="image-dots">
+                @for (dot of getImageDots(look); track $index) {
+                  <span
+                    class="image-dot"
+                    [class.active]="look.activeImageIndex === $index">
+                  </span>
+                }
+              </div>
+            }
+
+            <!-- Overlays -->
+            <div class="look-num-bg">{{ look.id }}</div>
+            <div class="season-pill">{{ look.season }}</div>
+          </div>
+        </div>
+
+        <!-- ── INFO PANEL ──────────────────────────── -->
+        <div class="look-info-panel">
+          <div class="look-info-scroll">
+            <div class="look-info-inner">
+
+              <!-- Chapter -->
+              <div class="look-chapter-block">
+                <span class="look-chapter-label">Look {{ look.id }} of {{ looks.length }}</span>
+                <h2 class="look-heading">{{ look.title }}</h2>
+                <p class="look-tagline">{{ look.subtitle }}</p>
+              </div>
+
+              <div class="gold-rule"></div>
+
+              <!-- Copy -->
+              <p class="look-copy">{{ look.copy }}</p>
+
+              <div class="gold-rule"></div>
+
+              <!-- Products -->
+              <div class="look-products-block">
+                <span class="the-look-label">The Look</span>
+                @for (lp of look.products; track lp.sku) {
+                  <div
+                    class="look-product"
+                    [class.has-product]="!!lp.product"
+                    (click)="goToProduct(lp.product?.id)">
+                    <div class="lp-thumb">
+                      @if (lp.product?.media?.length) {
+                        <img
+                          [src]="getPrimaryImage(lp.product!.media)"
+                          [alt]="lp.label"
+                          class="lp-thumb-img">
+                      } @else {
+                        <div class="lp-thumb-empty"></div>
+                      }
+                    </div>
+                    <div class="lp-details">
+                      <span class="lp-sku">{{ lp.sku }}</span>
+                      <span class="lp-name">{{ lp.product?.title ?? lp.label }}</span>
+                      @if (lp.product?.price) {
+                        <span class="lp-price">
+                          {{ lp.product!.currency }} {{ lp.product!.price | number:'1.0-0' }}
+                        </span>
+                      }
+                    </div>
+                    @if (lp.product) {
+                      <span class="lp-arrow">→</span>
+                    }
+                  </div>
+                }
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── KEYWORD BAND between looks ─────────────── -->
+      @if (!last) {
+        <div class="keyword-band">
+          <div class="keyword-band-inner">
+            @for (kw of look.keywords; track kw; let klast = $last) {
+              <span class="keyword">{{ kw }}</span>
+              @if (!klast) { <span class="keyword-dot">·</span> }
+            }
+          </div>
+        </div>
+      }
+
+    }
+
+    <!-- ── CLOSING ─────────────────────────────────── -->
+    <div class="lb-closing">
+      <div class="closing-rule"></div>
+      <p class="closing-headline">The Collection. Autumn / Winter '26.</p>
+      <p class="closing-sub">Four looks. Six houses. One uncompromising standard.</p>
+      <a routerLink="/category/all" class="closing-btn">Shop All Pieces</a>
+      <div class="closing-rule"></div>
+    </div>
+
+  }
+</div>

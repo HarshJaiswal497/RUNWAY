@@ -1,0 +1,142 @@
+<!-- ── HERO ─────────────────────────────────────────── -->
+<section class="hero">
+  <img src="/hero-bg.png" alt="" class="hero-bg-img">
+  <div class="hero-gradient"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <span class="hero-season">Summer / Autumn 2026</span>
+    <h1 class="hero-title">
+      The Art of<br><em>Quiet</em><br>Luxury
+    </h1>
+    <p class="hero-desc">
+      Curated pieces from the world's most revered fashion houses.
+      Collected for those who understand that true luxury is never loud.
+    </p>
+    <div class="hero-ctas">
+      <button class="btn-solid" (click)="goToAllProducts()">Shop New In</button>
+      <button class="btn-ghost" routerLink="/our-story">Our Story</button>
+    </div>
+  </div>
+
+  <span class="hero-scroll">Scroll</span>
+</section>
+
+<!-- ── MARQUEE ───────────────────────────────────────── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    @for (i of [1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10]; track $index) {
+      <span class="marquee-item">
+        <span class="marquee-dot"></span> Apparel
+        <span class="marquee-dot"></span> Accessories
+        <span class="marquee-dot"></span> Footwear
+        <span class="marquee-dot"></span> New Arrivals
+        <span class="marquee-dot"></span> Luxury Editorial
+        <span class="marquee-dot"></span> Free Delivery on All Orders
+        <span class="marquee-dot"></span> Authenticated &amp; Curated
+        <span class="marquee-dot"></span> Premium Fashion
+        <span class="marquee-dot"></span> Exclusive Collections
+      </span>
+    }
+  </div>
+</div>
+
+<!-- ── CATEGORIES ────────────────────────────────────── -->
+<section class="categories-section">
+  <div class="section-header">
+    <div>
+      <span class="eyebrow">Shop by Category</span>
+      <h2 class="section-title">Collections</h2>
+    </div>
+  </div>
+
+  @if (loadingCategories()) {
+    <div class="loading-row">
+      @for (i of [1,2,3]; track i) {
+        <div class="skeleton-card"></div>
+      }
+    </div>
+  } @else {
+    <div class="categories-grid">
+      @for (cat of categories(); track cat.id) {
+        <div class="cat-card" (click)="goToCategory(cat.id)">
+          <div
+            class="cat-card-bg"
+            [style.background-image]="'url(' + getCategoryImage(cat.slug) + ')'">
+          </div>
+          <div class="cat-card-overlay"></div>
+          <div class="cat-card-inner">
+            <span class="cat-label">Collection</span>
+            <h3 class="cat-name">{{ cat.name }}</h3>
+            <p class="cat-desc">{{ cat.description }}</p>
+            <span class="cat-arrow">Explore →</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</section>
+
+<div class="divider-line"></div>
+
+<!-- ── NEW ARRIVALS ──────────────────────────────────── -->
+<section class="products-section">
+  <div class="section-header">
+    <div>
+      <span class="eyebrow">Just Arrived</span>
+      <h2 class="section-title">New This Week</h2>
+    </div>
+    <button class="view-all" (click)="goToAllProducts()">View All →</button>
+  </div>
+
+  @if (error()) {
+    <div class="error-msg">{{ error() }}</div>
+  } @else if (loadingProducts()) {
+    <div class="products-grid">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="skeleton-product"></div>
+      }
+    </div>
+  } @else if (newArrivals().length === 0) {
+    <div class="empty-state">
+      <p>No products available at the moment.</p>
+    </div>
+  } @else {
+    <div class="products-grid">
+      @for (product of newArrivals(); track product.id) {
+        <div class="product-card" (click)="goToProduct(product.id)">
+          <div class="product-img-wrap">
+            <img
+              [src]="getPrimaryImage(product.media)"
+              [alt]="product.title"
+              class="product-img"
+              loading="lazy"
+              (error)="$any($event.target).src='/placeholder.jpg'">
+            <div class="product-overlay">
+              <span>Quick View</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <span class="product-sku">{{ product.sku }}</span>
+            <h3 class="product-title">{{ product.title }}</h3>
+            <span class="product-price">
+              {{ product.currency }} {{ product.price | number:'1.2-2' }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</section>
+
+<!-- ── LOOKBOOK BAND ──────────────────────────────────── -->
+<section class="lookbook">
+  <div class="lookbook-overlay"></div>
+  <div class="lookbook-content">
+    <span class="lookbook-label">A/W '26 Lookbook</span>
+    <h2 class="lookbook-title">Dressed for<br><em>Every Season</em></h2>
+    <button class="btn-ghost" routerLink="/lookbook">View Lookbook</button>
+  </div>
+</section>

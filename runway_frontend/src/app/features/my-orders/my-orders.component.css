@@ -1,0 +1,353 @@
+:host {
+  --black:    #080808;
+  --black2:   #0f0f0f;
+  --black3:   #161616;
+  --gold:     #C9A84C;
+  --goldlt:   #D4AF6A;
+  --golddim:  rgba(201,168,76,0.18);
+  --goldline: rgba(201,168,76,0.22);
+  --white:    #F4F2EC;
+  --grey1:    #AAAAAA;
+  --grey2:    #666666;
+  --grey3:    #333333;
+  display: block;
+  background: var(--black);
+  min-height: 100vh;
+}
+
+.orders-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 52px 72px 100px;
+  min-height: 100vh;
+}
+
+@media (max-width: 1024px) { .orders-page { padding: 40px 32px 80px; } }
+@media (max-width: 640px)  { .orders-page { padding: 28px 20px 60px; } }
+
+/* ── HEADER ─────────────────────────────────────────────────────────────────── */
+.orders-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 48px;
+  border-bottom: 1px solid var(--goldline);
+  padding-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.eyebrow {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 400;
+  color: var(--white);
+}
+
+.orders-meta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  color: var(--gold);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+
+/* ── ORDER CARDS LIST ───────────────────────────────────────────────────────── */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--goldline);
+  border: 1px solid var(--goldline);
+}
+
+.order-card {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 0;
+  background: var(--black2);
+  cursor: pointer;
+  transition: background 0.2s;
+  height: 110px;          /* fixed height — every card identical */
+  overflow: hidden;        /* prevent any child from breaking out */
+}
+
+.order-card:hover { background: var(--black3); }
+
+@media (max-width: 640px) {
+  .order-card { grid-template-columns: 1fr; height: auto; }
+}
+
+/* ── IMAGE STRIP ────────────────────────────────────────────────────────────── */
+.order-imgs {
+  display: flex;
+  gap: 1px;
+  background: var(--goldline);
+  overflow: hidden;
+  border-right: 1px solid var(--goldline);
+  flex-shrink: 0;
+  height: 110px;           /* matches card height exactly */
+}
+
+.order-img-wrap {
+  flex: 1;
+  overflow: hidden;
+  background: var(--black3);
+  min-width: 0;
+  height: 110px;
+}
+
+.order-img {
+  width: 100%;
+  height: 110px;           /* explicit px — no stretching */
+  object-fit: cover;
+  object-position: center 15%;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.order-card:hover .order-img { transform: scale(1.04); }
+
+/* +N more indicator */
+.order-img-more {
+  flex: 0 0 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black3);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  color: var(--grey2);
+  border-right: 1px solid var(--goldline);
+  height: 110px;
+}
+
+@media (max-width: 640px) {
+  .order-imgs {
+    height: 90px;
+    border-right: none;
+    border-bottom: 1px solid var(--goldline);
+  }
+  .order-img-wrap,
+  .order-img,
+  .order-img-more { height: 90px; }
+}
+
+/* ── ORDER INFO ─────────────────────────────────────────────────────────────── */
+.order-info {
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  overflow: hidden;
+  height: 110px;
+}
+
+.order-top-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.order-number {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--white);
+}
+
+/* Product title previews */
+.order-lines-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.line-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--grey1);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 380px;
+}
+
+.line-more {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  color: var(--grey2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.order-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.order-date,
+.order-item-count {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  color: var(--grey2);
+  letter-spacing: 0.1em;
+}
+
+/* ── RIGHT COLUMN ───────────────────────────────────────────────────────────── */
+.order-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-left: 1px solid var(--goldline);
+  flex-shrink: 0;
+  height: 110px;
+}
+
+.order-total {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--goldlt);
+  white-space: nowrap;
+}
+
+.order-arrow {
+  font-size: 20px;
+  color: var(--grey3);
+  transition: color 0.2s, transform 0.2s;
+}
+.order-card:hover .order-arrow { color: var(--gold); transform: translateX(3px); }
+
+@media (max-width: 640px) {
+  .order-right {
+    border-left: none;
+    border-top: 1px solid var(--goldline);
+    flex-direction: row;
+    padding: 16px 20px;
+  }
+}
+
+/* ── STATUS BADGES ──────────────────────────────────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.status-pending    { background: var(--golddim);           color: var(--gold);  border: 1px solid var(--goldline); }
+.status-paid       { background: rgba(76,175,80,0.1);      color: #6fcf6f;      border: 1px solid rgba(76,175,80,0.25); }
+.status-processing { background: rgba(127,119,221,0.12);   color: #a78bfa;      border: 1px solid rgba(127,119,221,0.3); }
+.status-shipped    { background: rgba(55,138,221,0.1);     color: #4db8ff;      border: 1px solid rgba(55,138,221,0.25); }
+.status-delivered  { background: rgba(76,175,80,0.12);     color: #4caf50;      border: 1px solid rgba(76,175,80,0.3); }
+.status-completed  { background: rgba(38,217,122,0.1);     color: #26d97a;      border: 1px solid rgba(38,217,122,0.25); }
+.status-cancelled  { background: rgba(229,85,85,0.08);     color: #e55;         border: 1px solid rgba(229,85,85,0.25); }
+.status-refunded   { background: rgba(127,119,221,0.1);    color: #a78bfa;      border: 1px solid rgba(127,119,221,0.25); }
+
+/* ── PAGINATION ─────────────────────────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 40px;
+}
+
+.page-btn {
+  background: transparent;
+  border: 1px solid var(--grey3);
+  color: var(--grey1);
+  padding: 10px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+.page-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+.page-info {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  color: var(--grey2);
+  letter-spacing: 0.15em;
+}
+
+/* ── STATES ─────────────────────────────────────────────────────────────────── */
+.state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.state-icon {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: var(--grey3);
+}
+
+.state-message p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: var(--grey2);
+  letter-spacing: 0.1em;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 36px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.25s;
+}
+.btn-ghost:hover { background: var(--golddim); }
+
+/* ── SKELETONS ──────────────────────────────────────────────────────────────── */
+.skeleton-list { display: flex; flex-direction: column; gap: 1px; }
+
+.skeleton-row  { height: 110px; background: var(--black2); }
+
+.skeleton-pulse { animation: shimmer 1.5s infinite; }
+
+@keyframes shimmer {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}

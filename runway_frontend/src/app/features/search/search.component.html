@@ -1,0 +1,105 @@
+<div class="search-page">
+
+  <!-- ── HEADER ─────────────────────────────────── -->
+  <div class="search-header">
+    @if (query()) {
+      <div class="search-header-content">
+        <span class="eyebrow">Search Results</span>
+        <h1 class="search-title">
+          "{{ query() }}"
+        </h1>
+        @if (!loading()) {
+          <p class="search-meta">
+            {{ results().length }} {{ results().length === 1 ? 'piece' : 'pieces' }} found
+          </p>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ── RESULTS ────────────────────────────────── -->
+  @if (loading()) {
+    <div class="products-grid">
+      @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track $index) {
+        <div class="skeleton-product"></div>
+      }
+    </div>
+
+  } @else if (!query()) {
+    <div class="empty-state">
+      <p class="empty-title">Start Searching</p>
+      <p class="empty-sub">Type in the search bar above to find pieces</p>
+    </div>
+
+  } @else if (results().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M16.5 16.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M8 11h6M11 8v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="empty-title">No results for "{{ query() }}"</p>
+      <p class="empty-sub">Try a different search term</p>
+      <div class="suggestions">
+        <p class="suggestions-label">Try searching for</p>
+        <div class="suggestion-pills">
+          @for (s of ['Gown', 'Suit', 'Heel', 'Watch', 'Bag', 'Saree']; track s) {
+            <button class="suggestion-pill" (click)="router.navigate(['/search'], { queryParams: { q: s } })">
+              {{ s }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+  } @else {
+    <div class="results-wrap">
+      <div class="products-grid">
+        @for (product of visibleResults(); track product.id) {
+          <div class="product-card" (click)="goToProduct(product.id)">
+            <div class="product-img-wrap">
+              <img
+                [src]="getPrimaryImage(product.media)"
+                [alt]="product.title"
+                class="product-img"
+                loading="lazy"
+                (error)="$any($event.target).src='/placeholder.jpg'">
+              <div class="product-overlay">View Piece</div>
+              @if (product.attributes?.['gender']) {
+                <span class="gender-tag">{{ product.attributes['gender'] }}</span>
+              }
+            </div>
+            <div class="product-info">
+              <span class="product-sku">{{ product.sku }}</span>
+              <h3 class="product-title"
+                [innerHTML]="highlight(product.title)">
+              </h3>
+              @if (product.attributes?.['material']) {
+                <p class="product-material">{{ product.attributes['material'] }}</p>
+              }
+              <span class="product-price">
+                {{ product.currency }} {{ product.price | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (hasMore()) {
+        <div class="load-more-wrap">
+          <button class="btn-ghost" (click)="loadMore()">
+            Load More
+            <span class="load-count">
+              ({{ results().length - visibleCount() }} remaining)
+            </span>
+          </button>
+        </div>
+      } @else if (results().length > 12) {
+        <p class="all-loaded">All {{ results().length }} pieces shown</p>
+      }
+    </div>
+  }
+
+</div>

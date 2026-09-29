@@ -1,0 +1,101 @@
+<div class="new-page">
+
+  <a routerLink="/support" class="back-link">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+      <path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    Client Services
+  </a>
+
+  <div class="new-wrap">
+
+    <div class="new-header">
+      <span class="new-eyebrow">New Request</span>
+      <h1 class="new-title">Raise a Request</h1>
+      <p class="new-subtitle">
+        Our advisors review every request personally and respond within 24 hours.
+      </p>
+    </div>
+
+    @if (error()) {
+      <div class="form-error">{{ error() }}</div>
+    }
+
+    <form class="new-form" (ngSubmit)="submit()">
+
+      <!-- Subject -->
+      <div class="field">
+        <label class="field-label" for="subject">Subject <span class="req">*</span></label>
+        <input
+          id="subject"
+          type="text"
+          class="field-input"
+          placeholder="e.g. Missing item from my order"
+          [ngModel]="subject()"
+          (ngModelChange)="subject.set($event)"
+          name="subject"
+          autocomplete="off"
+          maxlength="200"
+        />
+        <span class="field-hint">Briefly describe the nature of your enquiry.</span>
+      </div>
+
+      <!-- Priority -->
+      <div class="field">
+        <label class="field-label">Priority <span class="req">*</span></label>
+        <div class="priority-grid">
+          @for (p of priorities; track p.value) {
+            <label
+              class="priority-card"
+              [class.selected]="priority() === p.value"
+              [class.pcard-low]="p.value === 'LOW'"
+              [class.pcard-medium]="p.value === 'MEDIUM'"
+              [class.pcard-high]="p.value === 'HIGH'"
+              [class.pcard-critical]="p.value === 'CRITICAL'">
+              <input
+                type="radio"
+                name="priority"
+                [value]="p.value"
+                [checked]="priority() === p.value"
+                (change)="priority.set(p.value)"
+                class="priority-radio"
+              />
+              <span class="priority-card-label">{{ p.label }}</span>
+              <span class="priority-card-desc">{{ p.desc }}</span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <!-- Order reference (optional) -->
+      <div class="field">
+        <label class="field-label" for="orderId">Order Reference</label>
+        <input
+          id="orderId"
+          type="text"
+          class="field-input"
+          placeholder="Optional — paste your order number"
+          [ngModel]="orderId()"
+          (ngModelChange)="orderId.set($event)"
+          name="orderId"
+          autocomplete="off"
+        />
+        <span class="field-hint">Attach an order to help us resolve your request faster.</span>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+        <button type="submit" class="btn-submit" [disabled]="submitting()">
+          @if (submitting()) {
+            <span class="spinner"></span> Submitting…
+          } @else {
+            Submit Request
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

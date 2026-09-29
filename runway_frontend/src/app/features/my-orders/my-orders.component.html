@@ -1,0 +1,116 @@
+<div class="orders-page">
+
+  <div class="orders-header">
+    <div>
+      <span class="eyebrow">My Account</span>
+      <h1 class="page-title">My Orders</h1>
+    </div>
+    @if (!loading() && totalItems() > 0) {
+      <span class="orders-meta">{{ totalItems() }} order{{ totalItems() !== 1 ? 's' : '' }}</span>
+    }
+  </div>
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (n of [1,2,3,4]; track n) {
+        <div class="skeleton-row skeleton-pulse"></div>
+      }
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="state-message">
+      <span class="state-icon">—</span>
+      <p>{{ error() }}</p>
+      <button class="btn-ghost" (click)="loadOrders(0)">Retry</button>
+    </div>
+  }
+
+  <!-- Empty -->
+  @if (isEmpty()) {
+    <div class="state-message">
+      <span class="state-icon">—</span>
+      <p>You haven't placed any orders yet.</p>
+      <a class="btn-ghost" routerLink="/category/all">Start shopping</a>
+    </div>
+  }
+
+  <!-- Orders list -->
+  @if (!loading() && !error() && orders().length > 0) {
+
+    <div class="orders-list">
+      @for (row of orders(); track row.order.id) {
+
+        <div class="order-card" (click)="goToDetail(row.order.id)">
+
+          <!-- Left: image strip of first 3 products -->
+          <div class="order-imgs">
+            @for (line of row.order.lines.slice(0, 3); track line.productId) {
+              <div class="order-img-wrap">
+                <img
+                  [src]="getLineImage(row, line.productId)"
+                  [alt]="line.productTitle"
+                  class="order-img"
+                  (error)="$any($event.target).src='/placeholder.jpg'"
+                />
+              </div>
+            }
+            <!-- Extra items indicator -->
+            @if (row.order.lines.length > 3) {
+              <div class="order-img-more">
+                +{{ row.order.lines.length - 3 }}
+              </div>
+            }
+          </div>
+
+          <!-- Middle: order info -->
+          <div class="order-info">
+            <div class="order-top-row">
+              <span class="order-number">{{ row.order.orderNumber }}</span>
+              <span class="status-badge" [class]="statusClass(row.order.status)">
+                {{ statusLabel(row.order.status) }}
+              </span>
+            </div>
+
+            <div class="order-lines-preview">
+              @for (line of row.order.lines.slice(0, 2); track line.productId) {
+                <span class="line-title">{{ line.productTitle }}</span>
+              }
+              @if (row.order.lines.length > 2) {
+                <span class="line-more">+{{ row.order.lines.length - 2 }} more</span>
+              }
+            </div>
+
+            <div class="order-meta-row">
+              <span class="order-date">{{ row.order.createdAt | date:'mediumDate' }}</span>
+              <span class="order-item-count">
+                {{ row.order.lines.length }} item{{ row.order.lines.length !== 1 ? 's' : '' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Right: total + arrow -->
+          <div class="order-right">
+            <span class="order-total">{{ row.order.totalAmount | currency:row.order.currency }}</span>
+            <span class="order-arrow">›</span>
+          </div>
+
+        </div>
+
+      }
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button class="page-btn" (click)="prevPage()" [disabled]="currentPage() === 0">← Prev</button>
+        <span class="page-info">{{ currentPage() + 1 }} / {{ totalPages() }}</span>
+        <button class="page-btn" (click)="nextPage()" [disabled]="currentPage() >= totalPages() - 1">Next →</button>
+      </div>
+    }
+
+  }
+
+</div>

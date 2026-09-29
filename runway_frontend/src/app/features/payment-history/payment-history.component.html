@@ -1,0 +1,111 @@
+<div class="history-page">
+
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">My Account</span>
+      <h1 class="page-title">Payment History</h1>
+    </div>
+    @if (!loading() && totalItems() > 0) {
+      <span class="page-meta">{{ totalItems() }} transaction{{ totalItems() !== 1 ? 's' : '' }}</span>
+    }
+  </div>
+
+  <!-- Summary cards -->
+  @if (!loading() && rows().length > 0) {
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span class="summary-label">Total Spent</span>
+        <span class="summary-amount">{{ totalSpent() | currency:'INR' }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Completed</span>
+        <span class="summary-count completed">{{ completedCount() }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Pending</span>
+        <span class="summary-count pending">{{ pendingCount() }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Failed</span>
+        <span class="summary-count failed">{{ failedCount() }}</span>
+      </div>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (n of [1,2,3,4,5]; track n) {
+        <div class="skeleton-row skeleton-pulse"></div>
+      }
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="state-message">
+      <p>{{ error() }}</p>
+      <button class="btn-ghost" (click)="loadHistory(0)">Retry</button>
+    </div>
+  }
+
+  <!-- Empty -->
+  @if (isEmpty()) {
+    <div class="state-message">
+      <p>No payment history yet.</p>
+      <a routerLink="/category/all" class="btn-ghost">Start shopping</a>
+    </div>
+  }
+
+  <!-- Table -->
+  @if (!loading() && !error() && rows().length > 0) {
+    <div class="table-wrap">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.orderId) {
+            <tr class="table-row" (click)="goToOrder(row.orderId)">
+              <td class="col-order">{{ row.orderNumber }}</td>
+              <td class="col-date">{{ row.date | date:'mediumDate' }}</td>
+              <td class="col-items">{{ row.itemCount }} item{{ row.itemCount !== 1 ? 's' : '' }}</td>
+              <td class="col-amount">{{ row.amount | currency:row.currency }}</td>
+              <td class="col-status">
+                <span class="pay-badge" [class]="payStatusClass(row.paymentStatus)">
+                  {{ row.paymentStatus }}
+                </span>
+              </td>
+              <td class="col-action">
+                @if (row.paymentStatus === 'PENDING') {
+                  <button
+                    class="retry-btn"
+                    (click)="$event.stopPropagation(); retryPayment(row.orderId)"
+                  >Pay now</button>
+                } @else {
+                  <span class="view-link">View ›</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button class="page-btn" (click)="prevPage()" [disabled]="currentPage() === 0">← Prev</button>
+        <span class="page-info">{{ currentPage() + 1 }} / {{ totalPages() }}</span>
+        <button class="page-btn" (click)="nextPage()" [disabled]="currentPage() >= totalPages() - 1">Next →</button>
+      </div>
+    }
+  }
+
+</div>

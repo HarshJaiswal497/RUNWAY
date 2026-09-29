@@ -1,0 +1,173 @@
+<section class="reviews-section">
+  <div class="reviews-container">
+
+    <!-- ══ LOADING SKELETON ══════════════════════════════ -->
+    @if (loading) {
+      <div class="skeleton-wrap">
+        <div class="skel-intro">
+          <div class="skel-line w-28 short"></div>
+          <div class="skel-line w-44 tall"></div>
+        </div>
+        <div class="skel-rule"></div>
+        <div class="cards-grid">
+          @for (n of [1, 2, 3]; track n) {
+            <div class="skel-card">
+              <div class="skel-card-body">
+                <div class="skel-line w-32 short"></div>
+                <div class="skel-line w-72 medium"></div>
+                <div class="skel-line w-full short"></div>
+                <div class="skel-line w-88 short"></div>
+                <div class="skel-line w-56 short"></div>
+              </div>
+              <div class="skel-card-footer">
+                <div class="skel-avatar"></div>
+                <div class="skel-meta">
+                  <div class="skel-line w-44 short"></div>
+                  <div class="skel-line w-28 short"></div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ══ CONTENT ════════════════════════════════════════ -->
+    @else {
+
+      <!-- Section intro: title | score + breakdown | write btn -->
+      <div class="section-intro">
+
+        <div class="intro-text">
+          <span class="eyebrow">Client Impressions</span>
+          <h2 class="reviews-title">Voices of Our Clients</h2>
+        </div>
+
+        @if (count > 0) {
+          <div class="score-area">
+            <div class="score-main">
+              <span class="score-num">{{ average | number:'1.1-1' }}</span>
+              <div class="score-aside">
+                <div class="stars-row">
+                  @for (n of starRange; track n) {
+                    <span class="star"
+                      [class.full]="getStarState(n) === 'full'"
+                      [class.half]="getStarState(n) === 'half'"
+                      [class.empty]="getStarState(n) === 'empty'">★</span>
+                  }
+                </div>
+                <span class="count-label">
+                  {{ count }}&nbsp;{{ count === 1 ? 'review' : 'reviews' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="score-sep"></div>
+
+            <!-- Breakdown: [n ★] [bar] [count] — all visible at a glance -->
+            <div class="breakdown-bars">
+              @for (n of breakdownRange; track n) {
+                <div class="bd-row">
+                  <span class="bd-label">{{ n }} ★</span>
+                  <div class="bd-track">
+                    <div class="bd-fill" [style.width.%]="getStarPercent(n)"></div>
+                  </div>
+                  <span class="bd-count">{{ getStarCount(n) }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+       
+
+      </div>
+
+      <div class="reviews-rule"></div>
+      <!-- Write a Review — only when logged in and hasn't reviewed yet -->
+        @if (canWriteReview) {
+          <app-create-reviews
+            [productId]="productId"
+            (reviewSubmitted)="onReviewSubmitted()">
+          </app-create-reviews>
+        }
+      <!-- ══ EMPTY STATE ══ -->
+      @if (!reviews || reviews.length === 0) {
+        <div class="reviews-empty">
+          <span class="empty-ornament">✦</span>
+          <p class="empty-headline">No Reviews Yet</p>
+          <p class="empty-sub">Be the first to share your experience with this piece</p>
+        </div>
+      }
+
+      <!-- ══ CARDS GRID ══ -->
+      @else {
+        <div class="cards-grid">
+          @for (review of visibleReviews; track review.id ?? $index) {
+            <article class="review-card">
+
+              <div class="card-body">
+                <div class="card-top">
+                  <div class="card-stars">
+
+                    @for (n of starRange; track n) {       
+                      <span class="card-star"
+                        [class.full]="isCardStarFull(n, getReviewRating(review))"
+                        [class.empty]="!isCardStarFull(n, getReviewRating(review))">
+                        {{ cardStarChar(n, getReviewRating(review)) }}
+                      </span>
+                    }
+                  </div>
+                  
+                </div>
+
+                <h3 class="card-title">{{ review.title || '' }}</h3>
+
+                <p class="card-text">
+                  {{ review.body || 'An exceptional piece — the quality and craftsmanship speak for themselves.' }}
+                </p>
+              </div>
+
+              <footer class="card-footer">
+                <div class="avatar">{{ getInitial(review.userName) }}</div>
+                <div class="client-meta">
+                  <span class="client-name">{{ review.userName || 'Anonymous' }}</span>
+                  @if (review.createdAt) {
+                    <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+                  }
+                </div>
+                <div class="verified-badge">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
+                    <path d="M1.5 4.5L3.5 6.5L7.5 2.5"
+                      stroke="currentColor" stroke-width="1.4"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Verified
+                </div>
+              </footer>
+
+            </article>
+          }
+        </div>
+
+        <!-- Show More -->
+        @if (hasMore || reviews.length > 6) {
+          <div class="load-more-wrap">
+            <span class="load-more-count">
+              Showing {{ visibleReviews.length }} of {{ reviews.length }} reviews
+            </span>
+            @if (hasMore) {
+              <button class="btn-load-more" (click)="showMore()">Load More Reviews</button>
+            } @else {
+              <span class="all-loaded">All reviews shown</span>
+            }
+          </div>
+        }
+      }
+
+    }
+
+  </div>
+</section>
+
+

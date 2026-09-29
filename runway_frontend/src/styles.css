@@ -1,0 +1,99 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: #080808;
+  color: #F4F2EC;
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+}
+
+:root {
+  --black:    #080808;
+  --black2:   #0f0f0f;
+  --black3:   #161616;
+  --gold:     #C9A84C;
+  --goldlt:   #D4AF6A;
+  --golddim:  rgba(201,168,76,0.18);
+  --goldline: rgba(201,168,76,0.22);
+  --white:    #F4F2EC;
+  --grey1:    #AAAAAA;
+  --grey2:    #666666;
+  --grey3:    #333333;
+}
+
+/* ── RUNWAY TOOLTIP ───────────────────────────────── */
+/* Rendered on <body> by TooltipDirective — must live in global styles */
+.rw-tooltip {
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: #0a0a0a;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: #C9A84C;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: rwTooltipIn 0.16s ease forwards;
+}
+
+/* Arrow — rotated square shares the border and background,
+   so it blends seamlessly into the tooltip body */
+.rw-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(201, 168, 76, 0.3);
+  border-left: 1px solid rgba(201, 168, 76, 0.3);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+@keyframes rwTooltipIn {
+  from { opacity: 0; translate: 0 4px; }
+  to   { opacity: 1; translate: 0 0;   }
+}
+
+/* ── CUSTOM SCROLLBAR ─────────────────────────────── */
+/* Global — covers every scrollable element in the app  */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #C9A84C #080808;
+}
+/* Intentionally hidden scrollbars (set per-component) take priority
+   because their class selectors are more specific than * */
+
+/* Chrome / WebKit / Blink */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    #C9A84C,
+    #D4AF6A,
+    #251c01
+  );
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AF6A;
+}

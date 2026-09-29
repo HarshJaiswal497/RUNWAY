@@ -1,0 +1,166 @@
+<div class="detail-page">
+
+  <a routerLink="/orders" class="back-link">← All Orders</a>
+
+  @if (loading()) {
+    <div class="skeleton-block skeleton-pulse"></div>
+  }
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  @if (!loading() && order()) {
+    <div class="detail-layout">
+
+      <!-- ── LEFT: ORDER CONTENT ──────────────────────────────────── -->
+      <div class="detail-main">
+
+        <!-- Header -->
+        <div class="detail-header">
+          <div>
+            <span class="eyebrow">Order</span>
+            <h1 class="detail-title">{{ order()!.orderNumber }}</h1>
+            <span class="detail-date">Placed {{ order()!.createdAt | date:'longDate' }}</span>
+          </div>
+          <span class="status-badge" [class]="statusClass(order()!.status)">
+            {{ statusLabel(order()!.status) }}
+          </span>
+        </div>
+
+        <!-- Order lines with product images -->
+        <div class="detail-section">
+          <h2 class="section-label">Items</h2>
+
+          <div class="lines-list">
+            @for (line of order()!.lines; track line.productId) {
+              <div class="line-row">
+
+                <!-- Product image -->
+                <a [routerLink]="['/product', line.productId]" class="line-img-wrap">
+                  <img
+                    [src]="getLineImage(line.productId)"
+                    [alt]="line.productTitle"
+                    class="line-img"
+                    (error)="$any($event.target).src='/placeholder.jpg'"
+                  />
+                </a>
+
+                <!-- Line info -->
+                <div class="line-info">
+                  <a [routerLink]="['/product', line.productId]" class="line-title">
+                    {{ line.productTitle }}
+                  </a>
+                  <div class="line-meta">
+                    <span class="line-qty">Qty {{ line.quantity }}</span>
+                    <span class="line-unit">{{ line.unitPrice | currency:order()!.currency }}</span>
+                  </div>
+                </div>
+
+                <!-- Line total -->
+                <span class="line-total">{{ line.lineTotal | currency:order()!.currency }}</span>
+
+              </div>
+            }
+          </div>
+
+          <!-- Order total -->
+          <div class="order-total-row">
+            <span>Order total</span>
+            <span class="order-total">{{ order()!.totalAmount | currency:order()!.currency }}</span>
+          </div>
+        </div>
+
+        <!-- Shipping -->
+        <div class="detail-section">
+          <h2 class="section-label">Shipping</h2>
+          <p class="shipping-address">{{ order()!.shippingAddress }}</p>
+          @if (order()!.notes) {
+            <p class="shipping-notes">Note: {{ order()!.notes }}</p>
+          }
+        </div>
+
+        <!-- Shipment inline -->
+        @if (!shipmentLoading() && shipment()) {
+          <div class="detail-section">
+            <h2 class="section-label">Shipment</h2>
+            <div class="shipment-summary">
+              <div class="ship-row">
+                <span class="ship-key">Status</span>
+                <span class="ship-val">{{ statusLabel(shipment()!.status) }}</span>
+              </div>
+              @if (shipment()!.carrier) {
+                <div class="ship-row">
+                  <span class="ship-key">Carrier</span>
+                  <span class="ship-val">{{ shipment()!.carrier }}</span>
+                </div>
+              }
+              @if (shipment()!.trackingNumber) {
+                <div class="ship-row">
+                  <span class="ship-key">Tracking #</span>
+                  <span class="ship-val tracking-num">{{ shipment()!.trackingNumber }}</span>
+                </div>
+              }
+              @if (shipment()!.shippedAt) {
+                <div class="ship-row">
+                  <span class="ship-key">Shipped at</span>
+                  <span class="ship-val">{{ shipment()!.shippedAt | date:'medium' }}</span>
+                </div>
+              }
+              @if (shipment()!.deliveredAt) {
+                <div class="ship-row">
+                  <span class="ship-key">Delivered at</span>
+                  <span class="ship-val">{{ shipment()!.deliveredAt | date:'medium' }}</span>
+                </div>
+              }
+            </div>
+            <button class="btn-ghost" (click)="trackShipment()">Track Shipment →</button>
+          </div>
+        }
+
+        @if (!shipmentLoading() && !shipment()
+             && order()!.status !== 'PENDING_PAYMENT'
+             && order()!.status !== 'CANCELLED') {
+          <div class="detail-section">
+            <h2 class="section-label">Shipment</h2>
+            <p class="muted">Shipment will be created once your order enters processing.</p>
+          </div>
+        }
+
+      </div>
+
+      <!-- ── RIGHT: ACTIONS ────────────────────────────────────────── -->
+      <aside class="detail-aside">
+        <h2 class="section-label">Actions</h2>
+
+        @if (shipment()) {
+          <button class="btn-primary" (click)="trackShipment()">Track Shipment</button>
+        }
+
+        @if (canCancel()) {
+          <button class="btn-danger" (click)="cancelOrder()" [disabled]="cancelling()">
+            @if (cancelling()) { Cancelling… } @else { Cancel Order }
+          </button>
+          <p class="cancel-hint">Only available before payment is confirmed.</p>
+        }
+
+        <a routerLink="/orders" class="btn-ghost-block">Back to Orders</a>
+
+        <div class="aside-support">
+          <span class="aside-support-label">Need assistance with this order?</span>
+          <a [routerLink]="['/support/new']"
+             [queryParams]="{ orderId: order()!.id }"
+             class="btn-support-link">
+            Raise a Request
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </aside>
+
+    </div>
+  }
+
+</div>

@@ -1,0 +1,250 @@
+:host {
+  --black:    #080808;
+  --black2:   #0f0f0f;
+  --black3:   #161616;
+  --gold:     #C9A84C;
+  --goldlt:   #D4AF6A;
+  --golddim:  rgba(201,168,76,0.12);
+  --goldline: rgba(201,168,76,0.22);
+  --white:    #F4F2EC;
+  --grey1:    #AAAAAA;
+  --grey2:    #666666;
+  --grey3:    #333333;
+  display: block;
+  background: var(--black);
+  min-height: 100vh;
+}
+
+/* ── HEADER ───────────────────────────────────────── */
+.wishlist-header {
+  padding: 72px 72px 52px;
+  border-bottom: 1px solid var(--goldline);
+  background: linear-gradient(180deg, var(--black2) 0%, var(--black) 100%);
+}
+
+.eyebrow {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+}
+
+.wishlist-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.wishlist-count {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--grey1);
+  font-style: italic;
+}
+
+/* ── GRID ─────────────────────────────────────────── */
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--goldline);
+  border-bottom: 1px solid var(--goldline);
+  padding: 40px 72px;
+  gap: 24px;
+  background: var(--black);
+}
+
+/* ── CARD ─────────────────────────────────────────── */
+.wishlist-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--black2);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: border-color 0.25s;
+}
+.wishlist-card:hover { border-color: var(--goldline); }
+
+.card-img-wrap {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--black3);
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.5s ease;
+}
+.card-img-wrap:hover .card-img { transform: scale(1.04); }
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8,8,8,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+   color:#C9A84C;
+  font-family: 'Montserrat', sans-serif;
+}
+.card-img-wrap:hover .card-overlay { opacity: 1; }
+
+.card-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.card-sku {
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--white);
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1.3;
+}
+.card-title:hover { color: var(--gold); }
+
+.card-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  color: var(--goldlt);
+  font-weight: 300;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-view {
+  flex: 1;
+  padding: 9px 0;
+  background: var(--gold);
+  border: none;
+  color: var(--black);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-view:hover { background: var(--goldlt); }
+
+.btn-remove {
+  width: 36px;
+  background: transparent;
+  border: 1px solid var(--grey3);
+  color: var(--grey2);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.btn-remove:hover {
+  border-color: #f87171;
+  color: #f87171;
+}
+.btn-remove:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── SKELETON ─────────────────────────────────────── */
+.skeleton-card {
+  aspect-ratio: 3/4;
+  background: linear-gradient(90deg, var(--black3) 25%, var(--black2) 50%, var(--black3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── EMPTY STATE ──────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 40px;
+  gap: 16px;
+  text-align: center;
+  color: var(--grey3);
+}
+
+.empty-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--white);
+  margin-top: 8px;
+}
+
+.empty-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: var(--grey2);
+  letter-spacing: 0.08em;
+}
+
+.btn-explore {
+  margin-top: 16px;
+  padding: 12px 40px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-explore:hover { background: var(--golddim); }
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media (max-width: 1200px) {
+  .wishlist-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .wishlist-grid { grid-template-columns: repeat(2, 1fr); padding: 32px 40px; }
+  .wishlist-header { padding: 52px 40px 40px; }
+}
+
+@media (max-width: 600px) {
+  .wishlist-grid { grid-template-columns: 1fr; padding: 24px; }
+  .wishlist-header { padding: 40px 24px 32px; }
+}

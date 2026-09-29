@@ -1,0 +1,109 @@
+<section class="notif-page">
+  <div class="notif-container">
+
+    <!-- ── HEADER ── -->
+    <div class="notif-header">
+      <div class="notif-intro">
+        <span class="eyebrow">Your Updates</span>
+        <h1 class="notif-title">Notifications</h1>
+      </div>
+      <div class="notif-header-actions">
+        @if (notifService.unreadCount() > 0) {
+          <span class="notif-unread-count">{{ notifService.unreadCount() }} unread</span>
+          <button class="mark-all-btn" (click)="notifService.markAllRead()">Mark all as read</button>
+        }
+        @if (notifications().length > 0) {
+          <span class="notif-count">
+            {{ notifications().length }}&nbsp;{{ notifications().length === 1 ? 'notification' : 'notifications' }}
+          </span>
+        }
+      </div>
+    </div>
+
+    <div class="notif-rule"></div>
+
+    <!-- ── LOADING ─- -->
+    @if (loading()) {
+      <div class="skel-list">
+        @for (n of [1, 2, 3, 4]; track n) {
+          <div class="skel-item">
+            <div class="skel-icon"></div>
+            <div class="skel-body">
+              <div class="skel-line w-20 short"></div>
+              <div class="skel-line w-60 medium"></div>
+              <div class="skel-line w-80 short"></div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ── EMPTY ── -->
+    @else if (notifications().length === 0) {
+      <div class="notif-empty">
+        <span class="empty-ornament">✦</span>
+        <p class="empty-headline">All Quiet</p>
+        <p class="empty-sub">No notifications to display at this time</p>
+      </div>
+    }
+
+    <!-- ── GROUPED LIST ── -->
+    @else {
+      @for (group of groupedNotifications(); track group.label) {
+        <div class="notif-group">
+          <span class="group-label">{{ group.label }}</span>
+
+          <div class="notif-list">
+            @for (n of group.items; track n.id) {
+              <article class="notif-item" [class.notif-new]="isNew(n)" (click)="onNotifClick(n)">
+
+                <div class="notif-icon-wrap" [class]="'icon-' + getEventCategory(n.event)">
+                  @switch (getEventCategory(n.event)) {
+                    @case ('order') {
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    }
+                    @case ('payment') {
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M2 10h20" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    }
+                    @case ('review') {
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    }
+                    @default {
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    }
+                  }
+                </div>
+
+                <div class="notif-body">
+                  <div class="notif-meta-row">
+                    <span class="notif-event-label">{{ getEventLabel(n.event) }}</span>
+                    @if (isNew(n)) {
+                      <span class="new-pip">New</span>
+                    }
+                  </div>
+                  <p class="notif-subject">{{ n.subject }}</p>
+                  @if (n.content) {
+                    <p class="notif-content">{{ n.content }}</p>
+                  }
+                  <span class="notif-time">{{ formatDate(n.createdAt) }}</span>
+                </div>
+
+              </article>
+            }
+          </div>
+        </div>
+      }
+    }
+
+  </div>
+</section>

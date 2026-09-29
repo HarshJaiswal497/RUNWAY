@@ -1,0 +1,124 @@
+/* ── HOST ─────────────────────────────────────────── */
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.rw-wrap {
+  position: relative;
+  width: 100%;
+}
+
+/* ── TRIGGER ──────────────────────────────────────── */
+.rw-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--black3, #161616);
+  border: 1px solid var(--grey3, #333333);
+  color: var(--white, #F4F2EC);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.rw-trigger:hover,
+.rw-wrap.rw-open .rw-trigger {
+  border-color: var(--gold, #C9A84C);
+}
+
+.rw-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rw-label-placeholder {
+  color: var(--grey3, #333333);
+}
+
+/* ── CHEVRON ──────────────────────────────────────── */
+.rw-chevron {
+  flex-shrink: 0;
+  color: var(--grey2, #666666);
+  transition: transform 0.22s ease, color 0.2s;
+}
+
+.rw-chevron-open {
+  transform: rotate(180deg);
+  color: var(--gold, #C9A84C);
+}
+
+/* ── PANEL ────────────────────────────────────────── */
+.rw-panel {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 0;
+  right: 0;
+  background: #0f0f0f;
+  border: 1px solid rgba(201, 168, 76, 0.28);
+  z-index: 200;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+  max-height: 240px;
+  overflow-y: auto;
+  animation: rwSelectIn 0.14s ease forwards;
+}
+
+@keyframes rwSelectIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── OPTIONS ──────────────────────────────────────── */
+.rw-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--grey1, #AAAAAA);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s;
+}
+
+.rw-option:last-child { border-bottom: none; }
+
+.rw-option:hover:not(.rw-option-disabled) {
+  background: rgba(201, 168, 76, 0.06);
+  color: var(--white, #F4F2EC);
+}
+
+.rw-option-selected {
+  color: var(--gold, #C9A84C);
+}
+
+.rw-option-selected svg { color: var(--gold, #C9A84C); }
+
+.rw-option-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── DISABLED STATE ───────────────────────────────── */
+.rw-wrap.rw-disabled .rw-trigger {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}

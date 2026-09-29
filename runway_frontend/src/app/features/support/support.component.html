@@ -1,0 +1,130 @@
+<div class="support-page">
+
+  <!-- ── PAGE HEADER ───────────────────────────────────────────────────── -->
+  <div class="support-header">
+    <div class="support-header-left">
+      <span class="support-eyebrow">{{ isStaff() ? 'Staff Portal' : 'Client Services' }}</span>
+      <h1 class="support-title">{{ isStaff() ? 'All Requests' : 'Your Requests' }}</h1>
+      @if (!isStaff()) {
+        <p class="support-subtitle">
+          Our advisors are here to assist with orders, returns, and any enquiries.
+        </p>
+      }
+    </div>
+    @if (!isStaff()) {
+      <button class="btn-raise" (click)="raiseRequest()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Raise a Request
+      </button>
+    }
+  </div>
+
+  <!-- ── STATUS FILTERS (staff only) ──────────────────────────────────── -->
+  @if (isStaff()) {
+    <div class="filter-bar">
+      @for (f of filters; track f.value) {
+        <button
+          class="filter-btn"
+          [class.active]="filter() === f.value"
+          (click)="setFilter(f.value)">
+          {{ f.label }}
+          @if (f.value !== 'ALL') {
+            <span class="filter-count">{{ countByStatus(f.value) }}</span>
+          }
+        </button>
+      }
+    </div>
+  }
+
+  <!-- ── LOADING ────────────────────────────────────────────────────────── -->
+  @if (loading()) {
+    <div class="ticket-list">
+      @for (i of [1,2,3,4]; track $index) {
+        <div class="ticket-skel">
+          <div class="tskel-body">
+            <div class="tskel-line wide"></div>
+            <div class="tskel-line narrow"></div>
+          </div>
+          <div class="tskel-badge"></div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── ERROR ─────────────────────────────────────────────────────────── -->
+  @if (!loading() && error()) {
+    <div class="support-error">{{ error() }}</div>
+  }
+
+  <!-- ── EMPTY ─────────────────────────────────────────────────────────── -->
+  @if (!loading() && !error() && filtered().length === 0) {
+    <div class="support-empty">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="color:#333">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+              stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      @if (!isStaff()) {
+        <p class="empty-title">No requests yet</p>
+        <p class="empty-sub">Need help with an order or a product? We're here.</p>
+        <button class="btn-raise" (click)="raiseRequest()">Raise a Request</button>
+      } @else {
+        <p class="empty-title">No requests at this time</p>
+      }
+    </div>
+  }
+
+  <!-- ── TICKET LIST ───────────────────────────────────────────────────── -->
+  @if (!loading() && !error() && filtered().length > 0) {
+    <div class="ticket-list">
+
+      <!-- Column headers -->
+      <div class="ticket-cols">
+        <span class="col-subject">Request</span>
+        <span class="col-priority">Priority</span>
+        <span class="col-status">Status</span>
+        <span class="col-date">Opened</span>
+        <span class="col-arrow"></span>
+      </div>
+
+      @for (ticket of filtered(); track ticket.id) {
+        <div class="ticket-row" (click)="openTicket(ticket.id)">
+          <div class="col-subject">
+            <div class="ticket-subject-line">
+              <span class="ticket-ref">#{{ ticket.id }}</span>
+              <span class="ticket-subject">{{ ticket.subject }}</span>
+              @if (!isStaff()) {
+                <span
+                  class="advisor-badge"
+                  [class.assigned]="ticket.assignedTo"
+                  [title]="ticket.assignedTo ? 'Advisor assigned' : 'Awaiting advisor'">A</span>
+              }
+            </div>
+            @if (ticket.orderId) {
+              <span class="ticket-order">Order ref. {{ ticket.orderId }}</span>
+            }
+          </div>
+          <span class="col-priority">
+            <span class="chip" [class]="priorityClass(ticket.priority)">
+              {{ priorityLabel(ticket.priority) }}
+            </span>
+          </span>
+          <span class="col-status">
+            <span class="chip" [class]="statusClass(ticket.status)">
+              {{ statusLabel(ticket.status) }}
+            </span>
+          </span>
+          <span class="col-date ticket-date">{{ formatDate(ticket.createdAt) }}</span>
+          <span class="col-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      }
+    </div>
+  }
+
+</div>

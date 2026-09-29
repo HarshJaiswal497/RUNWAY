@@ -1,0 +1,38 @@
+<div class="ua-wrap">
+
+  <div class="ua-inner">
+    <div class="ua-icon" aria-hidden="true">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="11" width="18" height="11" rx="1"
+          stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M7 11V7a5 5 0 0110 0v4"
+          stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="16" r="1.2" fill="currentColor"/>
+      </svg>
+    </div>
+
+    <span class="eyebrow">Access Restricted</span>
+    <h1 class="ua-title">You don't have<br>permission here.</h1>
+    <p class="ua-desc">
+      @if (isLoggedIn) {
+        This area is reserved for a different account type.
+        Head to your own space or return to the homepage.
+      } @else {
+        You need to be signed in with the right account type
+        to access this page.
+      }
+    </p>
+
+    <div class="ua-actions">
+      @if (isLoggedIn) {
+        <a [routerLink]="dashboardRoute" class="btn-primary">{{ dashboardLabel }}</a>
+      } @else {
+        <a routerLink="/login" class="btn-primary">Sign In</a>
+      }
+      <a routerLink="/" class="btn-ghost">Return Home</a>
+    </div>
+  </div>
+
+  <div class="ua-rule"></div>
+
+</div>

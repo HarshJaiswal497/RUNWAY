@@ -1,0 +1,498 @@
+<header class="navbar">
+
+  <!-- ── MAIN BAR ─────────────────────────────────── -->
+  <div class="navbar-inner">
+
+    <!-- Left links (desktop only) -->
+    <nav class="nav-left">
+      <a routerLink="/category/all" class="nav-link" (click)="closeAll()">Shop All</a>
+      <button class="nav-link nav-btn" (click)="toggleMenu()">
+        Categories
+        <span class="chevron" [class.open]="isMenuOpen()">›</span>
+      </button>
+      <button class="nav-link nav-btn" (click)="toggleDesigners()">
+        Designers
+        <span class="chevron" [class.open]="isDesignerOpen()">›</span>
+      </button>
+    </nav>
+
+    <!-- Logo — absolutely centered -->
+    <a routerLink="/" class="navbar-logo" (click)="closeAll()">RunWay</a>
+
+    <!-- Right icons: Search | Wishlist | Cart | Notifications* | Support | Account | Hamburger -->
+    <div class="nav-right">
+
+      <!-- ① Search -->
+      <div class="search-wrap" (click)="$event.stopPropagation()">
+        @if (!isSearchOpen()) {
+          <button class="nav-icon-btn" (click)="toggleSearch()" aria-label="Search"
+            [rwTooltip]="'Search'">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M16.5 16.5L22 22" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </button>
+        } @else {
+          <div class="search-box">
+            <svg class="search-box-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="#C9A84C" stroke-width="1.8"/>
+              <path d="M16.5 16.5L22 22" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input
+              type="text"
+              class="search-box-input"
+              placeholder="Search pieces..."
+              (keydown)="onSearch($event)"
+              (input)="onSearchInput($any($event.target).value)"
+              (blur)="clearSuggestions()"
+              autocomplete="off" />
+            <button class="search-box-close" (click)="toggleSearch()" aria-label="Close search">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+
+          @if (suggestions().length > 0) {
+            <div class="search-suggestions">
+              @for (product of suggestions(); track product.id) {
+                <button class="suggestion-item" (mousedown)="selectSuggestion(product)">
+                  <div class="suggestion-img-wrap">
+                    @if (product.media && product.media.length > 0) {
+                      <img [src]="product.media[0].fullUrl" [alt]="product.title"
+                        class="suggestion-img"
+                        (error)="$any($event.target).src='/placeholder.jpg'" />
+                    } @else {
+                      <div class="suggestion-img-placeholder">
+                        {{ product.title.charAt(0).toUpperCase() }}
+                      </div>
+                    }
+                  </div>
+                  <div class="suggestion-info">
+                    <span class="suggestion-title">{{ product.title }}</span>
+                    <span class="suggestion-price">
+                      {{ product.currency }} {{ product.price | number:'1.0-0' }}
+                    </span>
+                  </div>
+                  <svg class="suggestion-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              }
+              <button class="suggestion-view-all" (mousedown)="viewAllResults()">
+                View all results for "<span>{{ searchQuery() }}</span>" →
+              </button>
+            </div>
+          }
+        }
+      </div>
+
+      <!-- ② Wishlist — desktop only -->
+      <a routerLink="/wishlist" class="nav-icon-btn hide-on-mobile"
+        [class.nav-icon-active]="isActive('/wishlist')"
+        aria-label="Wishlist"
+        [rwTooltip]="'Wishlist'">
+        @if (isActive('/wishlist')) {
+          <!-- filled heart -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
+              a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+              1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        } @else {
+          <!-- outlined heart -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
+              a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+              1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        }
+      </a>
+
+      <!-- ③ Cart -->
+      <button class="nav-icon-btn cart-btn"
+        [class.nav-icon-active]="isActive('/cart')"
+        (click)="goToCart()" aria-label="Shopping Bag"
+        [rwTooltip]="'Shopping Bag'">
+        @if (isActive('/cart')) {
+          <!-- filled bag -->
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="currentColor"/>
+            <path d="M3 6h18" stroke="#080808" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M16 10a4 4 0 01-8 0" stroke="#080808" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        } @else {
+          <!-- outlined bag -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 6h18M16 10a4 4 0 01-8 0"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        }
+        @if (cartService.cartCount() > 0) {
+          <span class="cart-badge">{{ cartService.cartCount() }}</span>
+        }
+      </button>
+
+      <!-- ④ Notifications — logged-in only, desktop only -->
+      @if (authService.isLoggedIn()) {
+        <div class="notif-wrap hide-on-mobile">
+          <button class="nav-icon-btn notif-btn"
+            [class.nav-icon-active]="isActive('/notifications')"
+            (click)="toggleNotif()" aria-label="Notifications"
+            [rwTooltip]="'Notifications'">
+            @if (isActive('/notifications')) {
+              <!-- filled bell -->
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" fill="currentColor"/>
+                <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" fill="none"/>
+              </svg>
+            } @else {
+              <!-- outlined bell -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M13.73 21a2 2 0 01-3.46 0"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            }
+            @if (notifService.unreadCount() > 0) {
+              <span class="notif-badge">{{ notifService.unreadCount() > 9 ? '9+' : notifService.unreadCount() }}</span>
+            }
+          </button>
+
+          @if (isNotifOpen()) {
+            <div class="notif-dropdown">
+              <div class="notif-drop-header">
+                <span class="notif-drop-title">Notifications</span>
+                @if (notifService.unreadCount() > 0) {
+                  <span class="notif-drop-count">{{ notifService.unreadCount() }} new</span>
+                }
+              </div>
+              <div class="notif-drop-divider"></div>
+
+              @if (notifService.loading()) {
+                <div class="notif-drop-list">
+                  @for (i of [1,2,3]; track $index) {
+                    <div class="notif-drop-skel">
+                      <div class="ndsk-icon"></div>
+                      <div class="ndsk-body">
+                        <div class="ndsk-line short"></div>
+                        <div class="ndsk-line long"></div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else if (notifService.notifications().length === 0) {
+                <div class="notif-drop-empty">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="color:#444">
+                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M13.73 21a2 2 0 01-3.46 0"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <span>No notifications yet</span>
+                </div>
+              } @else {
+                <div class="notif-drop-list">
+                  @for (n of latestNotifications; track n.id) {
+                    <div class="notif-drop-item" [class.notif-drop-new]="notifService.isNew(n)"
+                      (click)="viewAllNotifications()">
+                      <div class="notif-drop-body">
+                        <div class="notif-drop-meta">
+                          <span class="notif-drop-event">{{ getEventLabel(n.event) }}</span>
+                          @if (notifService.isNew(n)) {
+                            <span class="notif-drop-pip">New</span>
+                          }
+                        </div>
+                        <p class="notif-drop-subject">{{ n.subject }}</p>
+                        <span class="notif-drop-time">{{ timeAgo(n.createdAt) }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+
+              <div class="notif-drop-divider"></div>
+              <button class="notif-drop-footer" (click)="viewAllNotifications()">
+                View all notifications
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ⑤ Client Services — always visible, desktop only -->
+      <button class="nav-icon-btn hide-on-mobile"
+        [class.nav-icon-active]="isActive('/support')"
+        (click)="goToSupport()" aria-label="Client Services"
+        [rwTooltip]="'Client Services'">
+        @if (isActive('/support')) {
+          <!-- filled chat bubble -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          </svg>
+        } @else {
+          <!-- outlined chat bubble -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        }
+      </button>
+
+      <!-- ⑥ Account -->
+      <div class="account-wrap">
+        <button class="nav-icon-btn"
+          [class.nav-icon-active]="isActive('/account')"
+          (click)="goToLogin()" aria-label="Account"
+          [rwTooltip]="authService.isLoggedIn() ? 'My Account' : 'Sign In'">
+          @if (authService.isLoggedIn()) {
+            <!-- filled (auth state) -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color: var(--gold)">
+              <circle cx="12" cy="7" r="4"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          } @else {
+            <!-- outlined (guest) -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          }
+        </button>
+
+        @if (isAccountMenuOpen() && authService.isLoggedIn()) {
+          <div class="account-dropdown">
+            <div class="account-user">
+              <span class="account-name">{{ authService.currentUser()?.username }}</span>
+              <span class="account-role">{{ formatRole(authService.currentUser()?.role) }}</span>
+            </div>
+            <div class="account-divider"></div>
+            <button class="account-item" (click)="goToAccount()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              My Account
+            </button>
+            <div class="account-divider"></div>
+            <button class="account-item" (click)="logout()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Sign Out
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- ⑦ Hamburger — mobile only -->
+      <button class="hamburger" (click)="toggleMobileMenu()"
+        [attr.aria-expanded]="isMobileMenuOpen()" aria-label="Menu">
+        <span class="ham-line" [class.open-top]="isMobileMenuOpen()"></span>
+        <span class="ham-line ham-mid" [class.open-mid]="isMobileMenuOpen()"></span>
+        <span class="ham-line" [class.open-bot]="isMobileMenuOpen()"></span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ── CATEGORIES DRAWER (desktop) ────────────────── -->
+  <div class="drawer" [class.drawer-open]="isMenuOpen()">
+    <div class="drawer-inner">
+      <p class="drawer-label">Browse Categories</p>
+      @if (groupedCategories().length === 0) {
+        <div class="drawer-grid">
+          @for (i of [1,2,3]; track $index) { <div class="drawer-skeleton"></div> }
+        </div>
+      } @else {
+        <div class="categories-grouped">
+          @for (group of groupedCategories(); track group.parent.id) {
+            <div class="cat-group">
+              <button class="cat-parent" (click)="goToCategory(group.parent.id)">
+                {{ group.parent.name }}
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              @for (child of group.children; track child.id) {
+                <button class="cat-child" (click)="goToCategory(child.id)">{{ child.name }}</button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ── DESIGNERS DRAWER (desktop) ─────────────────── -->
+  <div class="drawer" [class.drawer-open]="isDesignerOpen()">
+    <div class="drawer-inner">
+      <p class="drawer-label">Our Designers</p>
+      @if (loadingDesigners()) {
+        <ul class="designers-grid">
+          @for (i of [1,2,3,4,5,6]; track $index) { <li class="drawer-skeleton"></li> }
+        </ul>
+      } @else {
+        <ul class="designers-grid">
+          @for (designer of designers(); track designer.id) {
+            <li>
+              <button class="designer-item" (click)="goToDesigner(designer.id)">
+                <div class="designer-info">
+                  <span class="designer-name">{{ designer.name }}</span>
+                  <span class="designer-focus">{{ designer.focus }}</span>
+                </div>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+
+  <!-- ── BACKDROP (desktop drawers) ────────────────── -->
+  <div class="backdrop" [class.backdrop-visible]="isMenuOpen() || isDesignerOpen()" (click)="closeAll()"></div>
+
+</header>
+
+<!-- ── MOBILE OVERLAY ────────────────────────────────── -->
+<div class="mobile-overlay" [class.visible]="isMobileMenuOpen()" (click)="closeMobileMenu()"></div>
+
+<!-- ── MOBILE MENU PANEL ─────────────────────────────── -->
+<nav class="mobile-menu" [class.open]="isMobileMenuOpen()" aria-label="Mobile navigation">
+
+  <div class="mm-head">
+    <span class="mm-logo">RunWay</span>
+    <button class="mm-close" (click)="closeMobileMenu()" aria-label="Close menu">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <div class="mm-rule"></div>
+
+  <div class="mm-section">
+    <p class="mm-section-label">Browse</p>
+
+    <button class="mm-item" (click)="mobileNavigate(['/category/all'])">
+      <span>Shop All</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <button class="mm-item mm-expand" (click)="mobileCatExpanded.set(!mobileCatExpanded())">
+      <span>Categories</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+        [style.transform]="mobileCatExpanded() ? 'rotate(90deg)' : 'rotate(0deg)'">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    @if (mobileCatExpanded()) {
+      <div class="mm-sub">
+        @for (group of groupedCategories(); track group.parent.id) {
+          <button class="mm-sub-parent" (click)="mobileNavigate(['/category', group.parent.id])">
+            {{ group.parent.name }}
+          </button>
+          @for (child of group.children; track child.id) {
+            <button class="mm-sub-child" (click)="mobileNavigate(['/category', child.id])">
+              {{ child.name }}
+            </button>
+          }
+        }
+      </div>
+    }
+
+    <button class="mm-item mm-expand" (click)="mobileDsnExpanded.set(!mobileDsnExpanded())">
+      <span>Designers</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+        [style.transform]="mobileDsnExpanded() ? 'rotate(90deg)' : 'rotate(0deg)'">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    @if (mobileDsnExpanded()) {
+      <div class="mm-sub">
+        @if (loadingDesigners()) {
+          @for (i of [1,2,3]; track $index) { <div class="mm-dsn-skel"></div> }
+        } @else {
+          @for (d of designers(); track d.id) {
+            <button class="mm-sub-parent mm-dsn-row" (click)="mobileNavigate(['/category', 'seller', d.id])">
+              <span class="mm-dsn-name">{{ d.name }}</span>
+              <span class="mm-dsn-focus">{{ d.focus }}</span>
+            </button>
+          }
+        }
+      </div>
+    }
+
+    <button class="mm-item" (click)="mobileNavigate(['/wishlist'])">
+      <span>Wishlist</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
+          a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+          1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </button>
+
+    <button class="mm-item" (click)="mobileNavigate(['/support'])">
+      <span>Client Services</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  @if (authService.isLoggedIn()) {
+    <div class="mm-rule"></div>
+    <div class="mm-section">
+      <p class="mm-section-label">My Account</p>
+
+      <button class="mm-item" (click)="mobileNavigate(['/notifications'])">
+        <span>Notifications</span>
+        <span class="mm-notif-right">
+          @if (notifService.unreadCount() > 0) {
+            <span class="mm-notif-badge">
+              {{ notifService.unreadCount() > 9 ? '9+' : notifService.unreadCount() }}
+            </span>
+          }
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </button>
+
+      <button class="mm-item" (click)="mobileNavigate(['/account'])">
+        <span>My Account</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mm-rule"></div>
+    <div class="mm-footer">
+      <div class="mm-user">
+        <span class="mm-user-name">{{ authService.currentUser()?.username }}</span>
+        <span class="mm-user-role">{{ formatRole(authService.currentUser()?.role) }}</span>
+      </div>
+      <button class="mm-signout" (click)="logout(); closeMobileMenu()">Sign Out</button>
+    </div>
+  } @else {
+    <div class="mm-rule"></div>
+    <div class="mm-section">
+      <button class="mm-signin-btn" (click)="mobileNavigate(['/login'])">Sign In</button>
+    </div>
+  }
+
+</nav>

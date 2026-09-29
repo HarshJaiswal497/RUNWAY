@@ -1,0 +1,236 @@
+:host {
+  --black:    #080808;
+  --black2:   #0f0f0f;
+  --black3:   #161616;
+  --gold:     #C9A84C;
+  --goldlt:   #D4AF6A;
+  --golddim:  rgba(201,168,76,0.18);
+  --goldline: rgba(201,168,76,0.22);
+  --white:    #F4F2EC;
+  --grey1:    #AAAAAA;
+  --grey2:    #666666;
+  --grey3:    #333333;
+  display: block;
+  background: var(--black);
+  min-height: 100vh;
+}
+
+.tracking-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 52px 24px 100px;
+  min-height: 100vh;
+}
+
+/* ── BACK LINK ──────────────────────────────────────────────────────────────── */
+.back-link {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--grey2);
+  text-decoration: none;
+  margin-bottom: 36px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--gold); }
+
+/* ── PAGE TITLE ─────────────────────────────────────────────────────────────── */
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 48px;
+}
+
+/* ── METADATA BLOCK ─────────────────────────────────────────────────────────── */
+.tracking-meta {
+  background: var(--black2);
+  border: 1px solid var(--goldline);
+  padding: 32px 36px;
+  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.meta-key {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--grey2);
+}
+
+.meta-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  color: var(--white);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-align: right;
+  max-width: 65%;
+}
+
+.tracking-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+}
+
+/* ── PROGRESS STEPPER ───────────────────────────────────────────────────────── */
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 0 48px;
+}
+
+.stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  opacity: 0.25;
+  transition: opacity 0.3s;
+}
+.stepper-step.done   { opacity: 0.65; }
+.stepper-step.active { opacity: 1; }
+
+/* Node circle — matches .size-btn proportions */
+.step-node {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--grey3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
+  transition: all 0.3s;
+}
+
+.stepper-step.done .step-node {
+  border-color: var(--gold);
+  background: var(--golddim);
+}
+
+.stepper-step.active .step-node {
+  border-color: var(--gold);
+  background: var(--gold);
+}
+
+.node-check {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold);
+}
+.stepper-step.active .node-check { color: var(--black); }
+
+.node-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--grey3);
+}
+.stepper-step.active .node-dot { background: var(--black); }
+
+.step-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7.5px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--grey1);
+  text-align: center;
+  max-width: 80px;
+  line-height: 1.5;
+}
+.stepper-step.active .step-label { color: var(--gold); }
+
+/* Connector line between steps */
+.step-connector {
+  flex: 1;
+  height: 1px;
+  background: var(--grey3);
+  margin-bottom: 48px;   /* pushes line down to align with node centres */
+  transition: background 0.3s;
+}
+.step-connector.done { background: var(--gold); opacity: 0.5; }
+
+/* ── RETURNED BANNER ────────────────────────────────────────────────────────── */
+.failed-banner {
+  background: rgba(229,85,85,0.08);
+  border: 1px solid rgba(229,85,85,0.3);
+  color: #e55;
+  padding: 16px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+/* ── EMPTY / ERROR STATE ────────────────────────────────────────────────────── */
+.state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.state-icon {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: var(--grey3);
+}
+
+.state-message p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  color: var(--grey2);
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+}
+
+/* Ghost button — matches product-detail */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 36px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.25s;
+}
+.btn-ghost:hover { background: var(--golddim); }
+
+/* ── SKELETON ───────────────────────────────────────────────────────────────── */
+.skeleton-block { height: 240px; background: var(--black2); }
+.skeleton-pulse { animation: shimmer 1.5s infinite; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

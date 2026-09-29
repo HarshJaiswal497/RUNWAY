@@ -1,0 +1,290 @@
+
+/* ══ WRITE REVIEW BUTTON ════════════════════════════════ */
+.btn-write-review {
+  padding: 11px 32px;
+  border: 1px solid var(--gold);
+  margin-bottom: 20px;
+  background: transparent;
+  margin-left: auto;
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  display: block;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  white-space: nowrap;
+}
+.eyebrow {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+  font-family: 'Montserrat', sans-serif;
+}
+.btn-write-review:hover { background: var(--golddim); }
+
+/* ══ MODAL ════════════════════════════════════════════════ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.88);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: backdropIn 0.2s ease;
+}
+
+.modal-card {
+  position: relative;
+  background: var(--black2);
+  border: 1px solid var(--goldline);
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  animation: cardIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-card::-webkit-scrollbar { display: none; }
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Close button */
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  background: none;
+  border: none;
+  color: var(--grey2);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+  transition: color 0.2s;
+  padding: 4px;
+}
+
+.modal-close:hover { color: var(--white); }
+
+/* Modal inner — form */
+.modal-inner {
+  padding: 40px 44px 44px;
+}
+
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 2.5vw, 28px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.15;
+  margin: 0 0 8px;
+}
+
+.modal-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  color: var(--grey2);
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+/* ── Form fields ────────────────────────────────────── */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.form-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--grey1);
+  text-align: left;
+}
+
+.field-req { color: var(--gold); margin-left: 2px; }
+
+/* ── Interactive star selector ──────────────────────── */
+.star-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.star-opt {
+  background: none;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--grey3);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.star-opt.active        { color: var(--gold); }
+.star-opt:hover         { transform: scale(1.15); }
+
+.rating-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-left: 8px;
+}
+
+/* ── Inputs ─────────────────────────────────────────── */
+.form-input,
+.form-textarea {
+  width: 100%;
+  background: var(--black3);
+  border: 1px solid var(--grey3);
+  color: var(--white);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--grey3);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.form-input:focus,
+.form-textarea:focus { border-color: var(--gold); }
+
+.form-input.input-error { border-color: #c97a7a; }
+
+.char-count {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  color: var(--grey3);
+  letter-spacing: 0.08em;
+  text-align: right;
+  margin-top: -4px;
+}
+
+/* ── Error message ──────────────────────────────────── */
+.form-error {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: #c97a7a;
+  line-height: 1.6;
+  padding: 10px 14px;
+  border-left: 2px solid #c97a7a;
+  background: rgba(201, 122, 122, 0.06);
+  margin-bottom: 4px;
+}
+
+/* ── Modal action buttons ───────────────────────────── */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.btn-modal-cancel {
+  padding: 13px 28px;
+  border: 1px solid var(--grey3);
+  background: transparent;
+  color: var(--grey2);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-modal-cancel:hover {
+  border-color: var(--grey2);
+  color: var(--white);
+}
+
+.btn-modal-submit {
+  padding: 13px 36px;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-modal-submit:hover:not(:disabled) { opacity: 0.88; }
+
+.btn-modal-submit:disabled {
+  background: var(--grey3);
+  color: var(--grey2);
+  cursor: not-allowed;
+}
+
+/* ── Success state ──────────────────────────────────── */
+.modal-success {
+  padding: 56px 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.success-ornament {
+  font-size: 20px;
+  color: var(--gold);
+  opacity: 0.7;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.success-message {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  line-height: 1.9;
+  color: var(--grey1);
+  letter-spacing: 0.04em;
+  max-width: 380px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 640px) {
+  .modal-inner     { padding: 32px 24px 36px; }
+  .modal-success   { padding: 40px 24px; }
+  .modal-actions   { flex-direction: column; }
+  .btn-modal-cancel,
+  .btn-modal-submit { width: 100%; text-align: center; }
+}

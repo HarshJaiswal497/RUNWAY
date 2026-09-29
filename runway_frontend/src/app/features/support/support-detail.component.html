@@ -1,0 +1,153 @@
+<div class="detail-page">
+
+  <!-- ── BACK LINK ──────────────────────────────────── -->
+  <a routerLink="/support" class="back-link">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+      <path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    Client Services
+  </a>
+
+  <!-- ── LOADING ─────────────────────────────────────── -->
+  @if (loading()) {
+    <div class="detail-skeleton">
+      <div class="skel-head"></div>
+      <div class="skel-chat">
+        <div class="skel-bubble right"></div>
+        <div class="skel-bubble left wide"></div>
+        <div class="skel-bubble right short"></div>
+      </div>
+    </div>
+  }
+
+  <!-- ── ERROR ──────────────────────────────────────── -->
+  @if (!loading() && error()) {
+    <div class="support-error">{{ error() }}</div>
+  }
+
+  <!-- ── CONTENT ─────────────────────────────────────── -->
+  @if (!loading() && ticket()) {
+
+    <!-- Request info card -->
+    <div class="request-card">
+      <div class="request-card-inner">
+        <div class="request-meta-block">
+          <span class="request-eyebrow">Request #{{ ticket()!.id }}</span>
+          <h1 class="request-subject">{{ ticket()!.subject }}</h1>
+          <div class="request-chips">
+            <span class="chip" [class]="priorityClass(ticket()!.priority)">
+              {{ priorityLabel(ticket()!.priority) }}
+            </span>
+            <span class="chip" [class]="statusClass(ticket()!.status)">
+              {{ statusLabel(ticket()!.status) }}
+            </span>
+            @if (ticket()!.orderId) {
+              <span class="request-order-ref">Order {{ ticket()!.orderId }}</span>
+            }
+          </div>
+        </div>
+
+        <!-- STAFF ACTIONS -->
+        @if (isStaff()) {
+          <div class="staff-actions">
+            @if (ticket()!.status === 'OPEN' && !ticket()!.assignedTo) {
+              <button class="btn-accept" (click)="acceptCase()">Accept Request</button>
+            }
+            @if (!isClosed()) {
+              <div class="status-pills">
+                @for (opt of statusOptions; track opt.value) {
+                  <button
+                    class="status-pill"
+                    [class.active]="ticket()!.status === opt.value"
+                    [disabled]="ticket()!.status === opt.value"
+                    (click)="changeStatus(opt.value)">
+                    {{ opt.label }}
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Chat card -->
+    <div class="chat-card">
+
+      <!-- Resolved banner -->
+      @if (isClosed()) {
+        <div class="resolved-banner">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Request resolved — for further assistance, please raise a new request.
+        </div>
+      }
+
+      <!-- Messages -->
+      <div class="chat-window">
+        @if (messages().length === 0) {
+          <div class="thread-empty">No messages yet. Begin the conversation below.</div>
+        }
+
+        @for (msg of messages(); track msg.id; let i = $index) {
+          <div class="msg-group" [class.mine]="isOwnMessage(msg)" [class.theirs]="!isOwnMessage(msg)">
+
+            @if (isFirstInGroup(i) && !isOwnMessage(msg)) {
+              <span class="msg-sender-label">RunWay Advisor</span>
+            }
+
+            <div class="msg-bubble"
+                 [class.mine]="isOwnMessage(msg)"
+                 [class.theirs]="!isOwnMessage(msg)"
+                 [class.first]="isFirstInGroup(i)"
+                 [class.last]="isLastInGroup(i)">
+              <p class="msg-text">{{ msg.message }}</p>
+            </div>
+
+            @if (isLastInGroup(i)) {
+              <span class="msg-time">{{ formatTime(msg.createdAt) }}</span>
+            }
+
+          </div>
+        }
+
+        <div #msgEnd></div>
+      </div>
+
+      <!-- Reply box -->
+      @if (!isClosed()) {
+        <div class="reply-bar">
+          <textarea
+            class="reply-input"
+            placeholder="Write a message…"
+            rows="1"
+            [ngModel]="replyText()"
+            (ngModelChange)="replyText.set($event)"
+            (keydown)="onReplyKey($event)"
+            [disabled]="sending()"
+          ></textarea>
+          <button
+            class="btn-send"
+            (click)="sendReply()"
+            [disabled]="!replyText().trim() || sending()"
+            aria-label="Send">
+            @if (sending()) {
+              <span class="spinner"></span>
+            } @else {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"
+                      stroke="currentColor" stroke-width="1.7"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            }
+          </button>
+        </div>
+      }
+
+    </div><!-- /chat-card -->
+
+  }
+
+</div>

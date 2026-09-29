@@ -1,0 +1,240 @@
+<div class="category-page">
+
+    <!-- ── PAGE HEADER ────────────────────────────────── -->
+    <div class="page-header">
+        @if (loadingCategories()) {
+        <div class="header-skeleton"></div>
+        } @else if (parentCategory()) {
+        <div class="header-content">
+            @if (parentCategory()!.id !== 0) {
+            <span class="eyebrow">{{ parentCategory()!.description }}</span>
+            }
+            <h1 class="page-title">{{ parentCategory()!.name }}</h1>
+            <p class="page-meta">{{ filteredProducts().length }} pieces</p>
+        </div>
+        }
+    </div>
+
+    <!-- ── TOOLBAR ────────────────────────────────────── -->
+    <div class="toolbar">
+        <div class="toolbar-row1">
+            <button class="filter-toggle" (click)="toggleSidebar()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18M7 12h10M11 18h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                Filters
+                @if (activeFilterCount() > 0) {
+                <span class="filter-badge">{{ activeFilterCount() }}</span>
+                }
+            </button>
+
+            <div class="sort-wrap">
+                <span class="sort-label">Sort</span>
+                <div class="sort-dropdown" [class.open]="sortOpen">
+                    <button class="sort-selected" (click)="sortOpen = !sortOpen">
+                        {{ sortLabel() }}
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </button>
+                    @if (sortOpen) {
+                    <div class="sort-options">
+                        @for (opt of sortOptions; track opt.value) {
+                        <button class="sort-opt" [class.active]="sortBy() === opt.value"
+                            (click)="setSort(opt.value); sortOpen = false">
+                            {{ opt.label }}
+                        </button>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbar-row2">
+            <button class="pill" [class.active]="activeSubcategory() === null" (click)="setSubcategory(null)">
+                All
+            </button>
+            @for (sub of subcategories(); track sub.id) {
+            <button class="pill" [class.active]="activeSubcategory() === sub.id" (click)="setSubcategory(sub.id)">
+                {{ sub.name }}
+            </button>
+            }
+        </div>
+    </div>
+
+    <!-- ── MAIN LAYOUT ────────────────────────────────── -->
+    <div class="layout" [class.sidebar-open]="sidebarOpen()">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" [class.open]="sidebarOpen()">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Refine</span>
+                @if (activeFilterCount() > 0) {
+                <button class="clear-btn" (click)="resetFilters()">Clear all</button>
+                }
+                <button class="sidebar-close" (click)="toggleSidebar()">✕</button>
+            </div>
+
+            <!-- Gender filter -->
+            @if (availableGenders().length > 0) {
+            <div class="filter-group" [class.open]="openFilters['gender']">
+                <div class="filter-title" (click)="toggleFilter('gender')">
+                    Gender
+                    <span class="filter-arrow">{{ openFilters['gender'] ? '−' : '+' }}</span>
+                </div>
+                @if (openFilters['gender']) {
+                <div class="filter-options">
+                    @for (g of availableGenders(); track g) {
+                    <button class="filter-opt" [class.active]="activeGender() === g" (click)="setGender(g)">
+                        <span class="opt-check">
+                            @if (activeGender() === g) { ✓ }
+                        </span>
+                        {{ g | titlecase }}
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+            }
+
+            <!-- Price filter -->
+            <div class="filter-group" [class.open]="openFilters['price']">
+                <div class="filter-title" (click)="toggleFilter('price')">
+                    Price Range
+                    <span class="filter-arrow">{{ openFilters['price'] ? '−' : '+' }}</span>
+                </div>
+                @if (openFilters['price']) {
+                <div class="price-options">
+                    @for (range of priceRanges; track range.label) {
+                    <button class="filter-opt" [class.active]="priceMin() === range.min && priceMax() === range.max"
+                        (click)="setPriceRange(range.min, range.max)">
+                        <span class="opt-check">
+                            @if (priceMin() === range.min && priceMax() === range.max) { ✓ }
+                        </span>
+                        {{ range.label }}
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Material filter -->
+            @if (availableMaterials().length > 0) {
+            <div class="filter-group" [class.open]="openFilters['material']">
+                <div class="filter-title" (click)="toggleFilter('material')">
+                    Material
+                    <span class="filter-arrow">{{ openFilters['material'] ? '−' : '+' }}</span>
+                </div>
+                @if (openFilters['material']) {
+                <div class="filter-options">
+                    @for (m of availableMaterials(); track m) {
+                    <button class="filter-opt" [class.active]="activeMaterial() === m" (click)="setMaterial(m)">
+                        <span class="opt-check">
+                            @if (activeMaterial() === m) { ✓ }
+                        </span>
+                        {{ m }}
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+            }
+
+            <!-- Color filter -->
+            @if (availableColors().length > 0) {
+            <div class="filter-group" [class.open]="openFilters['color']">
+                <div class="filter-title" (click)="toggleFilter('color')">
+                    Color
+                    <span class="filter-arrow">{{ openFilters['color'] ? '−' : '+' }}</span>
+                </div>
+                @if (openFilters['color']) {
+                <div class="filter-options">
+                    @for (c of availableColors(); track c) {
+                    <button class="filter-opt" [class.active]="activeColor() === c" (click)="setColor(c)">
+                        <span class="opt-check">
+                            @if (activeColor() === c) { ✓ }
+                        </span>
+                        {{ c }}
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+            }
+
+        </aside>
+
+        <!-- PRODUCT GRID -->
+        <main class="products-area">
+
+            @if (error()) {
+            <div class="error-msg">{{ error() }}</div>
+
+            } @else if (loadingProducts() || loadingCategories()) {
+            <div class="products-grid">
+                @for (i of [1,2,3,4,5,6,7,8,9]; track $index) {
+                <div class="skeleton-product"></div>
+                }
+            </div>
+
+            } @else if (filteredProducts().length === 0) {
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7.5M17 13l1.5 7.5M9 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <p class="empty-title">No pieces found</p>
+                <p class="empty-sub">Try adjusting your filters</p>
+                <button class="btn-ghost" (click)="resetFilters()">Clear Filters</button>
+            </div>
+
+            } @else {
+            <div class="products-grid">
+                @for (product of visibleProducts(); track product.id) {
+                <div class="product-card" (click)="goToProduct(product.id)">
+                    <div class="product-img-wrap">
+                        <img [src]="getPrimaryImage(product.media)" [alt]="product.title" class="product-img"
+                            loading="lazy" (error)="$any($event.target).src='/placeholder.jpg'">
+                        <div class="product-overlay">
+                            <span>View Piece</span>
+                        </div>
+                        @if (product.attributes?.['gender']) {
+                        <span class="gender-tag">{{ product.attributes['gender'] }}</span>
+                        }
+                    </div>
+                    <div class="product-info">
+                        <span class="product-sku">{{ product.sku }}</span>
+                        <h3 class="product-title">{{ product.title }}</h3>
+                        @if (product.attributes?.['material']) {
+                        <p class="product-material">{{ product.attributes['material'] }}</p>
+                        }
+                        <span class="product-price">
+                            {{ product.currency }} {{ product.price | number:'1.2-2' }}
+                        </span>
+                    </div>
+                </div>
+                }
+            </div>
+
+            <!-- Load more -->
+            @if (hasMore()) {
+            <div class="load-more-wrap">
+                <button class="btn-ghost" (click)="loadMore()">
+                    Load More
+                    <span class="load-count">
+                        ({{ filteredProducts().length - visibleCount() }} remaining)
+                    </span>
+                </button>
+            </div>
+            } @else if (filteredProducts().length > 9) {
+            <p class="all-loaded">All {{ filteredProducts().length }} pieces shown</p>
+            }
+            }
+
+        </main>
+    </div>
+</div>

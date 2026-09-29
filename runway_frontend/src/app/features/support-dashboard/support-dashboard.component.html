@@ -1,0 +1,459 @@
+<div class="dashboard" [class.sidebar-collapsed]="!sidebarOpen()">
+
+  <!-- ── SIDEBAR ──────────────────────────────────── -->
+  <aside class="sidebar" [class.open]="sidebarOpen()">
+
+    <div class="sidebar-brand">
+      @if (sidebarOpen()) {
+        <div>
+          <span class="brand-text">RunWay</span>
+          <span class="brand-role">Support Portal</span>
+        </div>
+      }
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        @if (sidebarOpen()) {
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        } @else {
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        }
+      </button>
+    </div>
+
+    @if (sidebarOpen() && userDetails()) {
+      <div class="sidebar-user">
+        <div class="user-avatar">
+          {{ userDetails().name?.charAt(0)?.toUpperCase() }}
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ userDetails().name }}</span>
+          <span class="user-role-badge">Advisor</span>
+        </div>
+      </div>
+    }
+
+    <nav class="sidebar-nav">
+      <button class="nav-item" [class.active]="activeSection() === 'overview'"
+        (click)="setSection('overview')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        @if (sidebarOpen()) { <span>Overview</span> }
+      </button>
+
+      <button class="nav-item" [class.active]="activeSection() === 'tickets'"
+        (click)="setSection('tickets')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        @if (sidebarOpen()) {
+          <span>Requests</span>
+          @if (openCount() > 0) {
+            <span class="nav-badge">{{ openCount() }}</span>
+          }
+        }
+      </button>
+
+      <button class="nav-item" [class.active]="activeSection() === 'notifications'"
+        (click)="setSection('notifications')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        @if (sidebarOpen()) { <span>Notifications</span> }
+      </button>
+    </nav>
+
+    <button class="sidebar-logout" (click)="logout()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      @if (sidebarOpen()) { <span>Sign Out</span> }
+    </button>
+  </aside>
+
+  <!-- ── MAIN ─────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- ── OVERVIEW ───────────────────────────────── -->
+    @if (activeSection() === 'overview') {
+      <div class="section">
+        <div class="section-header">
+          <div>
+            <h1 class="section-title">Overview</h1>
+            <p class="section-sub">Welcome back, {{ userDetails()?.name ?? 'Support' }}</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Open Requests</span>
+            <span class="stat-value open">{{ openCount() }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">In Progress</span>
+            <span class="stat-value progress">{{ inProgressCount() }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Closed</span>
+            <span class="stat-value closed">{{ closedCount() }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">My Requests</span>
+            <span class="stat-value">{{ myTicketsCount() }}</span>
+          </div>
+        </div>
+
+        <!-- Recent open tickets -->
+        <div class="overview-section">
+          <div class="overview-header">
+            <h2 class="subsection-title">Open Requests</h2>
+            <button class="btn-text" (click)="setSection('tickets')">View all →</button>
+          </div>
+
+          @if (loadingTickets()) {
+            <div class="table-skeleton"></div>
+          } @else if (overviewTickets().length === 0) {
+            <div class="empty-inline">No open requests — all clear!</div>
+          } @else {
+            <div class="ticket-table">
+              <div class="ticket-table-head">
+                <span>Subject</span>
+                <span>Priority</span>
+                <span>Status</span>
+                <span>Assigned</span>
+                <span>Created</span>
+                <span>Action</span>
+              </div>
+              @for (ticket of overviewTickets().slice(0, 5); track ticket.id) {
+                <div class="ticket-row">
+                  <span class="ticket-subject">{{ ticket.subject }}</span>
+                  <span class="priority-badge" [class]="getPriorityClass(ticket.priority)">
+                    {{ ticket.priority }}
+                  </span>
+                  <span class="status-badge" [class]="getStatusClass(ticket.status)">
+                    {{ statusLabel(ticket.status) }}
+                  </span>
+                  <span class="ticket-assigned">
+                    {{ ticket.assignedTo ? '#' + ticket.assignedTo : 'Unassigned' }}
+                  </span>
+                  <span class="ticket-date">{{ normalizeDate(ticket.createdAt) | date:'dd MMM':'+0530' }}</span>
+                  <button class="action-btn view" (click)="setSection('tickets'); openTicket(ticket)">
+                    View
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ── TICKETS ─────────────────────────────────── -->
+    @if (activeSection() === 'tickets') {
+      <div class="section">
+
+        @if (!activeTicket()) {
+          <!-- Ticket list -->
+          <div class="section-header">
+            <div>
+              <h1 class="section-title">Support Requests</h1>
+              <p class="section-sub">{{ filteredTickets().length }} requests</p>
+            </div>
+            <!-- Status filter tabs -->
+            <div class="filter-tabs">
+              <button class="filter-tab"
+                [class.active]="ticketStatusFilter() === 'ALL'"
+                (click)="ticketStatusFilter.set('ALL')">
+                All <span class="tab-count">{{ tickets().length }}</span>
+              </button>
+              <button class="filter-tab filter-tab-mine"
+                [class.active]="ticketStatusFilter() === 'MINE'"
+                (click)="ticketStatusFilter.set('MINE')">
+                Mine <span class="tab-count">{{ myTicketsCount() }}</span>
+              </button>
+              @for (status of ticketStatuses; track status) {
+                <button class="filter-tab"
+                  [class.active]="ticketStatusFilter() === status"
+                  (click)="ticketStatusFilter.set(status)">
+                  {{ statusLabel(status) }}
+                  <span class="tab-count">
+                    {{ tickets().filter(t => t.status === status).length }}
+                  </span>
+                </button>
+              }
+            </div>
+          </div>
+
+          @if (loadingTickets()) {
+            <div class="table-skeleton"></div>
+          } @else if (filteredTickets().length === 0) {
+            <div class="empty-state">
+              <p class="empty-title">No requests found</p>
+              <p class="empty-sub">Try a different filter</p>
+            </div>
+          } @else {
+            <div class="ticket-table">
+              <div class="ticket-table-head">
+                <span>Subject</span>
+                <span>Priority</span>
+                <span>Status</span>
+                <span>Assigned To</span>
+                <span>Created</span>
+                <span>Actions</span>
+              </div>
+              @for (ticket of filteredTickets(); track ticket.id) {
+                <div class="ticket-row" [class.my-ticket]="isMyTicket(ticket)">
+                  <div class="ticket-subject-wrap">
+                    <span class="ticket-subject">{{ ticket.subject }}</span>
+                    @if (ticket.orderId) {
+                      <span class="ticket-order">Order #{{ ticket.orderId }}</span>
+                    }
+                  </div>
+                  <span class="priority-badge" [class]="getPriorityClass(ticket.priority)">
+                    {{ ticket.priority }}
+                  </span>
+                  <span class="status-badge" [class]="getStatusClass(ticket.status)">
+                    {{ statusLabel(ticket.status) }}
+                  </span>
+                  <span class="ticket-assigned">
+                    @if (isMyTicket(ticket)) {
+                      <span style="color: var(--gold)">You</span>
+                    } @else if (ticket.assignedTo) {
+                      #{{ ticket.assignedTo }}
+                    } @else {
+                      <span style="color: var(--grey2)">Unassigned</span>
+                    }
+                  </span>
+                  <span class="ticket-date">{{ normalizeDate(ticket.createdAt) | date:'dd MMM, HH:mm':'+0530' }}</span>
+                  <div class="table-actions">
+                    <button class="action-btn view" (click)="openTicket(ticket)">View</button>
+                    @if (!ticket.assignedTo) {
+                      <button class="action-btn claim" (click)="claimTicket(ticket)">Claim</button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+        } @else {
+          <!-- Ticket detail / conversation -->
+          <div class="ticket-detail">
+            <button class="back-btn" (click)="closeTicketView()">← Back to Requests</button>
+
+            <div class="ticket-detail-header">
+              <div>
+                <h1 class="section-title">{{ activeTicket()!.subject }}</h1>
+                <div class="ticket-meta-row">
+                  <span class="priority-badge" [class]="getPriorityClass(activeTicket()!.priority)">
+                    {{ activeTicket()!.priority }}
+                  </span>
+                  <span class="status-badge" [class]="getStatusClass(activeTicket()!.status)">
+                    {{ statusLabel(activeTicket()!.status) }}
+                  </span>
+                  @if (activeTicket()!.orderId) {
+                    <span class="ticket-order">Order #{{ activeTicket()!.orderId }}</span>
+                  }
+                  <span class="ticket-date">
+                    {{ normalizeDate(activeTicket()!.createdAt) | date:'dd MMM yyyy, HH:mm':'+0530' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Status actions -->
+              <div class="ticket-actions-row">
+                @if (activeTicket()!.status === 'OPEN') {
+                  <button class="action-btn accept-btn"
+                    (click)="acceptCase(activeTicket()!)">
+                    Accept Request
+                  </button>
+                }
+                @if (activeTicket()!.status !== 'CLOSED' && (isMyTicket(activeTicket()!) || isAdmin())) {
+                  <button class="action-btn close-btn"
+                    (click)="updateStatus(activeTicket()!, 'CLOSED')">
+                    Close Request
+                  </button>
+                }
+              </div>
+            </div>
+
+            <!-- Customer info bar -->
+            <div class="customer-info-bar">
+              <div class="cib-item">
+                <span class="cib-label">Customer</span>
+                <span class="cib-value">{{ getCustomerName(activeTicket()!.userId) }}</span>
+              </div>
+              <div class="cib-item">
+                <span class="cib-label">Email</span>
+                <span class="cib-value">{{ getCustomerEmail(activeTicket()!.userId) || '—' }}</span>
+              </div>
+              <div class="cib-item">
+                <span class="cib-label">Ref.</span>
+                <span class="cib-value">#{{ activeTicket()!.id }}</span>
+              </div>
+              @if (activeTicket()!.orderId) {
+                <div class="cib-item">
+                  <span class="cib-label">Order</span>
+                  <span class="cib-value">#{{ activeTicket()!.orderId }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Conversation -->
+            <div class="conversation" #convScroll>
+              @if (loadingMessages()) {
+                <div class="table-skeleton"></div>
+              } @else if (activeMessages().length === 0) {
+                <div class="empty-inline">No messages yet.</div>
+              } @else {
+                @for (msg of activeMessages(); track msg.id; let i = $index) {
+                  <div class="msg-group"
+                    [class.mine]="isSupportMsg(msg)"
+                    [class.theirs]="!isSupportMsg(msg)"
+                    [class.last-in-group]="isLastInGroup(i)">
+                    @if (isFirstInGroup(i)) {
+                      <div class="msg-sender-label">
+                        {{ isSupportMsg(msg) ? 'RunWay Advisor' : getCustomerName(activeTicket()!.userId) }}
+                      </div>
+                    }
+                    <div class="msg-bubble" [class.mine]="isSupportMsg(msg)" [class.theirs]="!isSupportMsg(msg)">
+                      <p class="msg-text">{{ msg.message }}</p>
+                    </div>
+                    @if (isLastInGroup(i)) {
+                      <div class="msg-time">{{ normalizeDate(msg.createdAt) | date:'dd MMM, HH:mm':'+0530' }}</div>
+                    }
+                  </div>
+                }
+              }
+            </div>
+
+            <!-- Reply box — only if assigned to this advisor (or admin override) -->
+            @if (activeTicket()!.status === 'CLOSED') {
+              <div class="closed-notice">This request has been resolved — no further replies allowed.</div>
+            } @else if (isMyTicket(activeTicket()!) || isAdmin()) {
+              <div class="reply-box">
+                <textarea
+                  class="reply-input"
+                  placeholder="Type your reply..."
+                  [value]="replyMessage()"
+                  (input)="replyMessage.set($any($event.target).value)"
+                  rows="3">
+                </textarea>
+                <button class="btn-primary"
+                  [disabled]="sendingReply() || !replyMessage().trim()"
+                  (click)="sendReply()">
+                  @if (sendingReply()) { Sending... } @else { Send Reply }
+                </button>
+              </div>
+            } @else {
+              <div class="unassigned-reply-notice">
+                @if (activeTicket()!.status === 'OPEN') {
+                  Accept this request to begin the conversation.
+                } @else {
+                  This request is assigned to another advisor.
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ── NOTIFICATIONS ───────────────────────────── -->
+    @if (activeSection() === 'notifications') {
+      <div class="section">
+        <div class="section-header">
+          <div>
+            <h1 class="section-title">Notification Logs</h1>
+            <p class="section-sub">{{ filteredNotifications().length }} entries</p>
+          </div>
+        </div>
+
+        <div class="filter-tabs" style="margin-bottom: 20px;">
+          @for (grp of notifFilterGroups; track grp.value) {
+            <button class="filter-tab"
+              [class.active]="notifEventFilter() === grp.value"
+              (click)="notifEventFilter.set(grp.value)">
+              {{ grp.label }}
+              <span class="tab-count">
+                {{ grp.value === 'ALL'
+                  ? notifications().length
+                  : notifications().filter(n => n.event?.startsWith(grp.value)).length }}
+              </span>
+            </button>
+          }
+        </div>
+
+        @if (loadingNotifications()) {
+          <div class="table-skeleton"></div>
+        } @else if (filteredNotifications().length === 0) {
+          <div class="empty-state">
+            <p class="empty-title">No notification logs</p>
+          </div>
+        } @else {
+          <div class="ticket-table">
+            <div class="ticket-table-head notif-head">
+              <span>ID</span>
+              <span>User</span>
+              <span>Event</span>
+              <span>Channel</span>
+              <span>Status</span>
+              <span>Sent At</span>
+            </div>
+            @for (log of filteredNotifications(); track log.id) {
+              <div class="notif-entry">
+                <div class="ticket-row notif-row" (click)="toggleNotifExpand(log.id)"
+                  [class.notif-expanded]="expandedNotifId() === log.id">
+                  <span class="ticket-date">#{{ log.id }}</span>
+                  <span class="ticket-assigned">{{ log.userId }}</span>
+                  <div class="ticket-subject-wrap">
+                    <span class="ticket-subject">{{ log.event }}</span>
+                    @if (log.subject) {
+                      <span class="ticket-order">{{ log.subject }}</span>
+                    }
+                  </div>
+                  <span class="channel-badge channel-{{ log.channel.toLowerCase() }}">
+                    {{ log.channel }}
+                  </span>
+                  <span class="notif-status" [class]="getNotifStatusClass(log.status)">
+                    {{ log.status }}
+                  </span>
+                  <span class="ticket-date">
+                    {{ normalizeDate(log.sentAt ?? log.createdAt) | date:'dd MMM, HH:mm':'+0530' }}
+                  </span>
+                </div>
+                @if (expandedNotifId() === log.id && (log.content || log.errorMessage)) {
+                  <div class="notif-expand">
+                    @if (log.content) {
+                      <div class="notif-expand-row">
+                        <span class="notif-expand-label">Content</span>
+                        <span class="notif-expand-val">{{ log.content }}</span>
+                      </div>
+                    }
+                    @if (log.errorMessage) {
+                      <div class="notif-expand-row">
+                        <span class="notif-expand-label">Error</span>
+                        <span class="notif-expand-val notif-expand-error">{{ log.errorMessage }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+  </main>
+</div>
+

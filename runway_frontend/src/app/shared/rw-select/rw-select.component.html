@@ -1,0 +1,39 @@
+<div class="rw-wrap" [class.rw-open]="isOpen()" [class.rw-disabled]="isDisabled()">
+
+  <!-- ── Trigger ─────────────────────────────────── -->
+  <button type="button" class="rw-trigger" (click)="toggle()">
+    <span class="rw-label" [class.rw-label-placeholder]="!hasSelection">
+      {{ selectedLabel }}
+    </span>
+    <svg class="rw-chevron" [class.rw-chevron-open]="isOpen()"
+         width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <path d="M2 3.5L5 6.5L8 3.5"
+            stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- ── Panel ───────────────────────────────────── -->
+  @if (isOpen()) {
+    <div class="rw-panel">
+      @for (opt of options; track opt.value) {
+        <button
+          type="button"
+          class="rw-option"
+          [class.rw-option-selected]="isSelected(opt)"
+          [class.rw-option-disabled]="opt.disabled"
+          (click)="select(opt)">
+          <span>{{ opt.label }}</span>
+          @if (isSelected(opt)) {
+            <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+              <path d="M1 4L3.5 6.5L9 1"
+                    stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          }
+        </button>
+      }
+    </div>
+  }
+
+</div>

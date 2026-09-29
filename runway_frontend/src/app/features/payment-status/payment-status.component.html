@@ -1,0 +1,110 @@
+<div class="payment-page">
+
+  <a [routerLink]="['/orders', orderId()]" class="back-link">← Order Details</a>
+
+  @if (loading()) {
+    <div class="state-message"><div class="spinner"></div></div>
+  }
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  @if (!loading() && (payment() || order())) {
+    <div class="payment-card">
+
+      <!-- Status icon + heading -->
+      <div class="status-hero" [class]="statusClass()">
+        <div class="status-icon-wrap">
+          <span class="status-icon">{{ statusIcon() }}</span>
+        </div>
+        <div>
+          <span class="eyebrow">Payment</span>
+          <h1 class="page-title">
+            @if (payment()) {
+              {{ statusLabel(payment()!.status) }}
+            } @else {
+              {{ statusLabel(order()!.status) }}
+            }
+          </h1>
+        </div>
+      </div>
+
+      <div class="detail-rule"></div>
+
+      <!-- Payment details -->
+      @if (payment()) {
+        <div class="detail-rows">
+          <div class="detail-row">
+            <span class="detail-key">Order</span>
+            <span class="detail-val">{{ order()?.orderNumber ?? '#' + orderId() }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Amount</span>
+            <span class="detail-val amount">
+              {{ payment()!.amount | currency:payment()!.currency }}
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Status</span>
+            <span class="detail-val">
+              <span class="pay-badge" [class]="statusClass()">
+                {{ statusLabel(payment()!.status) }}
+              </span>
+            </span>
+          </div>
+          @if (payment()!.razorpayOrderId) {
+            <div class="detail-row">
+              <span class="detail-key">Razorpay ID</span>
+              <span class="detail-val mono">{{ payment()!.razorpayOrderId }}</span>
+            </div>
+          }
+          <div class="detail-row">
+            <span class="detail-key">Initiated</span>
+            <span class="detail-val">{{ payment()!.createdAt | date:'medium' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Last updated</span>
+            <span class="detail-val">{{ payment()!.updatedAt | date:'medium' }}</span>
+          </div>
+        </div>
+      }
+
+      <!-- Fallback when GET /payment/{id} not available -->
+      @if (!payment() && order()) {
+        <div class="detail-rows">
+          <div class="detail-row">
+            <span class="detail-key">Order</span>
+            <span class="detail-val">{{ order()!.orderNumber }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Order status</span>
+            <span class="detail-val">{{ statusLabel(order()!.status) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Amount</span>
+            <span class="detail-val amount">
+              {{ order()!.totalAmount | currency:order()!.currency }}
+            </span>
+          </div>
+          <p class="info-note">
+            Detailed payment information will be available once your payment gateway integration is active.
+          </p>
+        </div>
+      }
+
+      <div class="detail-rule"></div>
+
+      <!-- Actions -->
+      <div class="action-row">
+        @if (payment()?.status === 'FAILED' || order()?.status === 'PENDING_PAYMENT') {
+          <button class="btn-primary" (click)="retryPayment()">Retry Payment</button>
+        }
+        <a [routerLink]="['/orders', orderId()]" class="btn-ghost">View Order</a>
+        <a routerLink="/orders" class="btn-ghost">All Orders</a>
+      </div>
+
+    </div>
+  }
+
+</div>

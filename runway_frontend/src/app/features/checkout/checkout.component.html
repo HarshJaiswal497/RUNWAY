@@ -1,0 +1,475 @@
+<div class="checkout-page">
+
+  <!-- Steps -->
+  <div class="steps-bar">
+    <div class="step" [class.active]="step() === 'review'" [class.done]="step() !== 'review'">
+      <span class="step-num">1</span><span class="step-label">Review</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" [class.active]="step() === 'payment'" [class.done]="step() === 'confirmed'">
+      <span class="step-num">2</span><span class="step-label">Payment</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" [class.active]="step() === 'confirmed' || step() === 'failed'">
+      <span class="step-num">3</span><span class="step-label">Confirm</span>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-message"><div class="spinner"></div></div>
+  }
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  <!-- ── Step 1: Review + Shipping ──────────────────────────────────── -->
+  @if (!loading() && step() === 'review' && cart()) {
+    <div class="checkout-card">
+      <h2 class="section-title">Review your order</h2>
+
+      <!-- Order items -->
+      <div class="review-items">
+        @for (item of cart()!.items; track item.productId) {
+          <div class="review-item">
+            <span class="review-name">{{ item.productTitle }}</span>
+            <span class="review-qty">× {{ item.quantity }}</span>
+            <span class="review-price">
+              {{ item.unitPrice * item.quantity | currency:'INR' }}
+            </span>
+          </div>
+        }
+      </div>
+
+      <div class="review-total-row">
+        <span>Order total</span>
+        <span class="review-total">{{ cart()!.total | currency:'INR' }}</span>
+      </div>
+
+      <div class="detail-rule"></div>
+
+      <!-- ── Shipping address ──────────────────────────────────────── -->
+      <div class="form-group">
+        <label class="form-label">
+          Shipping Address <span class="required">*</span>
+        </label>
+
+        <!-- Saved addresses — shown if any exist -->
+        @if (savedAddresses().length > 0) {
+          <div class="address-options">
+            @for (addr of savedAddresses(); track addr.id) {
+              <label class="address-option"
+                [class.selected]="selectedAddressId() === addr.id">
+                <input type="radio" name="address"
+                  [value]="addr.id"
+                  [checked]="selectedAddressId() === addr.id"
+                  (change)="onAddressSelect(addr.id)" />
+                <div class="address-option-content">
+                  <div class="address-option-header">
+                    <span class="address-option-label">{{ addr.label }}</span>
+                    @if (addr.isDefault) {
+                      <span class="address-option-default">Default</span>
+                    }
+                  </div>
+                  <p class="address-option-text">{{ addr.address }}</p>
+                </div>
+              </label>
+            }
+
+            <!-- Option to enter a new address -->
+            <label class="address-option address-option-new"
+              [class.selected]="selectedAddressId() === 'new'">
+              <input type="radio" name="address" value="new"
+                [checked]="selectedAddressId() === 'new'"
+                (change)="onAddressSelect('new')" />
+              <div class="address-option-content">
+                <span class="address-option-label">
+                  + Enter a different address
+                </span>
+              </div>
+            </label>
+          </div>
+
+          <!-- Manage saved addresses link -->
+          <a (click)="goToAccount()" class="manage-addresses-link">
+            Manage saved addresses →
+          </a>
+        }
+
+
+        <!-- Manual address entry — separate fields -->
+        @if (manualEntry()) {
+          <div class="address-fields" style="margin-top: 12px">
+
+            <!-- Row 1: Flat No + Street -->
+            <div class="addr-row-2">
+              <div class="addr-field">
+                <label class="addr-label">
+                  Flat / House / Door No <span class="required">*</span>
+                </label>
+                <input class="addr-input"
+                  [class.field-error]="isTouched('flatNo') && flatNoError()"
+                  [class.field-valid]="isTouched('flatNo') && !flatNoError() && flatNo().trim()"
+                  type="text" placeholder="e.g. 42, Flat 3B"
+                  [value]="flatNo()"
+                  (input)="flatNo.set($any($event.target).value)"
+                  (blur)="touch('flatNo')"
+                  maxlength="50" />
+                @if (flatNoError()) {
+                  <span class="field-error-msg">{{ flatNoError() }}</span>
+                }
+              </div>
+
+              <div class="addr-field">
+                <label class="addr-label">
+                  Street / Road <span class="required">*</span>
+                </label>
+                <input class="addr-input"
+                  [class.field-error]="isTouched('street') && streetError()"
+                  [class.field-valid]="isTouched('street') && !streetError() && street().trim()"
+                  type="text" placeholder="e.g. Brigade Road"
+                  [value]="street()"
+                  (input)="street.set($any($event.target).value)"
+                  (blur)="touch('street')"
+                  maxlength="100" />
+                @if (streetError()) {
+                  <span class="field-error-msg">{{ streetError() }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Row 2: Area + City -->
+            <div class="addr-row-2">
+              <div class="addr-field">
+                <label class="addr-label">
+                  Area / Locality <span class="required">*</span>
+                </label>
+                <input class="addr-input"
+                  [class.field-error]="isTouched('area') && areaError()"
+                  [class.field-valid]="isTouched('area') && !areaError() && area().trim()"
+                  type="text" placeholder="e.g. Koramangala"
+                  [value]="area()"
+                  (input)="area.set($any($event.target).value)"
+                  (blur)="touch('area')"
+                  maxlength="100" />
+                @if (areaError()) {
+                  <span class="field-error-msg">{{ areaError() }}</span>
+                }
+              </div>
+
+              <div class="addr-field">
+                <label class="addr-label">
+                  City / Town <span class="required">*</span>
+                </label>
+                <input class="addr-input"
+                  [class.field-error]="isTouched('city') && cityError()"
+                  [class.field-valid]="isTouched('city') && !cityError() && city().trim()"
+                  type="text" placeholder="e.g. Bengaluru"
+                  [value]="city()"
+                  (input)="city.set($any($event.target).value)"
+                  (blur)="touch('city')"
+                  maxlength="60" />
+                @if (cityError()) {
+                  <span class="field-error-msg">{{ cityError() }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Row 3: State + PIN -->
+            <div class="addr-row-2">
+              <div class="addr-field addr-state-wrap">
+                <label class="addr-label">
+                  State <span class="required">*</span>
+                </label>
+                <input class="addr-input"
+                  [class.field-error]="isTouched('state') && stateError()"
+                  [class.field-valid]="isTouched('state') && !stateError() && state().trim()"
+                  type="text" placeholder="e.g. Karnataka"
+                  [value]="state()"
+                  (input)="state.set($any($event.target).value); showSuggestions.set(true)"
+                  (blur)="touch('state')"
+                  autocomplete="off"
+                  maxlength="60" />
+                <!-- State autocomplete suggestions -->
+                @if (stateSuggestions().length > 0 && !stateError()  && showSuggestions()) {
+                  <div class="state-suggestions">
+                    @for (s of stateSuggestions(); track s) {
+                      <button class="state-suggestion-item"
+                        type="button"
+                        (mousedown)="selectStateSuggestion(s)">
+                        {{ s }}
+                      </button>
+                    }
+                  </div>
+                }
+                @if (stateError()) {
+                  <span class="field-error-msg">{{ stateError() }}</span>
+                }
+              </div>
+
+              <div class="addr-field">
+                <label class="addr-label">
+                  PIN Code <span class="required">*</span>
+                </label>
+                <input class="addr-input"
+                  [class.field-error]="isTouched('pinCode') && pinError()"
+                  [class.field-valid]="isTouched('pinCode') && !pinError() && pinCode().trim()"
+                  type="text" inputmode="numeric"
+                  placeholder="e.g. 560034"
+                  [value]="pinCode()"
+                  (input)="formatPin($event)"
+                  (blur)="touch('pinCode')"
+                  maxlength="6" />
+                @if (pinError()) {
+                  <span class="field-error-msg">{{ pinError() }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Composed address preview -->
+            @if (addressFormValid()) {
+              <div class="composed-preview">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>{{ composedAddress() }}</span>
+              </div>
+            }
+
+          </div>
+        }
+
+        <!-- Show selected address preview (read-only) when a saved one is chosen -->
+        @if (!manualEntry() && selectedAddressId() !== 'new' && shippingAddress) {
+          <div class="selected-address-preview">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            <span>Delivering to: <strong>{{ shippingAddress }}</strong></span>
+          </div>
+        }
+      </div>
+
+      <!-- Notes -->
+      <div class="form-group">
+        <label class="form-label">Notes <span class="optional">(optional)</span></label>
+        <input class="form-input" type="text"
+          placeholder="Gift wrap, delivery instructions, etc."
+          [(ngModel)]="notes" maxlength="500" />
+      </div>
+
+      <button class="btn-primary"
+        (click)="placeOrder()"
+        [disabled]="processing() || !canPlaceOrder()">
+        @if (processing()) { Placing order… } @else { Place Order }
+      </button>
+    </div>
+  }
+
+  <!-- ── Step 2: Payment ─────────────────────────────────────────── -->
+  @if (step() === 'payment' && paymentIntent()) {
+    <div class="checkout-card">
+      <span class="eyebrow">Secure Payment</span>
+      <h2 class="section-title">Complete your purchase</h2>
+
+      <div class="payment-amount-box">
+        <span class="payment-label">Amount due</span>
+        <span class="payment-amount">
+          {{ paymentIntent()!.amount | currency:paymentIntent()!.currency }}
+        </span>
+      </div>
+
+      @if (paymentIntent()!.razorpayOrderId) {
+        <div class="razorpay-id">
+          <span class="razorpay-label">Razorpay Order</span>
+          <span class="razorpay-val">{{ paymentIntent()!.razorpayOrderId }}</span>
+        </div>
+      }
+
+      @if (cancelled()) {
+        <div class="cancelled-notice">
+          Payment cancelled. You can try again below.
+        </div>
+      }
+
+      <button class="btn-primary btn-pay" (click)="openPaymentModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <path d="M2 10h20"/>
+        </svg>
+        @if (cancelled()) { Try Again } @else {
+          Pay {{ paymentIntent()!.amount | currency:paymentIntent()!.currency }}
+        }
+      </button>
+    </div>
+
+    <!-- Mock Payment Modal -->
+    @if (showModal()) {
+      <div class="modal-overlay" (click)="closeModal()">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <div class="modal-brand">
+              <div class="modal-logo">R</div>
+              <div class="modal-brand-info">
+                <span class="modal-brand-name">RunWay</span>
+                <span class="modal-brand-amount">
+                  {{ paymentIntent()!.amount | currency:paymentIntent()!.currency }}
+                </span>
+              </div>
+            </div>
+            <button class="modal-close" (click)="closeModal()">✕</button>
+          </div>
+
+          <div class="modal-tabs">
+            <button class="modal-tab" [class.active]="payMethod() === 'card'"
+              (click)="payMethod.set('card')">Card</button>
+            <button class="modal-tab" [class.active]="payMethod() === 'upi'"
+              (click)="payMethod.set('upi')">UPI</button>
+            <button class="modal-tab" [class.active]="payMethod() === 'netbanking'"
+              (click)="payMethod.set('netbanking')">Net Banking</button>
+          </div>
+
+          @if (payMethod() === 'card') {
+            <div class="modal-form">
+              <div class="form-field">
+                <label class="field-label">Card number</label>
+                <input class="field-input" type="text"
+                  placeholder="4111 1111 1111 1111"
+                  [(ngModel)]="mockCard" maxlength="19"
+                  (input)="formatCard($event)" />
+              </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="field-label">Expiry</label>
+                  <input class="field-input" type="text"
+                    placeholder="MM / YY" [(ngModel)]="mockExpiry" maxlength="7" />
+                </div>
+                <div class="form-field">
+                  <label class="field-label">CVV</label>
+                  <input class="field-input" type="password"
+                    placeholder="•••" [(ngModel)]="mockCvv" maxlength="3" />
+                </div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">Name on card</label>
+                <input class="field-input" type="text"
+                  placeholder="Your name" [(ngModel)]="mockName" />
+              </div>
+            </div>
+          }
+
+          @if (payMethod() === 'upi') {
+            <div class="modal-form">
+              <div class="form-field">
+                <label class="field-label">UPI ID</label>
+                <input class="field-input" type="text"
+                  placeholder="yourname&#64;upi" [(ngModel)]="mockUpi" />
+              </div>
+              <p class="modal-note">Enter any UPI ID to simulate payment</p>
+            </div>
+          }
+
+          @if (payMethod() === 'netbanking') {
+            <div class="modal-form">
+              <div class="form-field">
+                <label class="field-label">Select Bank</label>
+                <rw-select
+                  placeholder="— Choose your bank —"
+                  [options]="bankOpts"
+                  [(ngModel)]="mockBank">
+                </rw-select>
+              </div>
+              <p class="modal-note">Select any bank to simulate payment</p>
+            </div>
+          }
+
+          @if (modalError()) {
+            <p class="modal-error">{{ modalError() }}</p>
+          }
+
+          <button class="modal-pay-btn" (click)="submitMockPayment()">
+            Pay {{ paymentIntent()!.amount | currency:paymentIntent()!.currency }}
+          </button>
+
+          <p class="modal-secure">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Secured · 256-bit SSL encryption
+          </p>
+        </div>
+      </div>
+    }
+
+    <!-- Processing overlay with countdown -->
+    @if (modalProcessing()) {
+      <div class="processing-overlay">
+        <div class="processing-card">
+          <div class="processing-spinner"></div>
+          <div class="processing-text">Processing payment…</div>
+          <div class="processing-sub">Communicating with payment gateway</div>
+
+          <div class="countdown-wrap">
+            <svg class="countdown-ring" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="18" fill="none"
+                stroke="var(--grey3)" stroke-width="2"/>
+              <circle cx="22" cy="22" r="18" fill="none"
+                stroke="var(--gold)" stroke-width="2"
+                stroke-dasharray="113"
+                [style.stroke-dashoffset]="113 - (113 * countdown() / 3)"
+                stroke-linecap="round"
+                transform="rotate(-90 22 22)"/>
+            </svg>
+            <span class="countdown-num">{{ countdown() }}</span>
+          </div>
+
+          <button class="cancel-processing-btn" (click)="cancelProcessing()">
+            Cancel Payment
+          </button>
+          <p class="processing-note">
+            You can cancel within {{ countdown() }}
+            second{{ countdown() !== 1 ? 's' : '' }}
+          </p>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- ── Step 3: Confirmed ───────────────────────────────────────────── -->
+  @if (step() === 'confirmed') {
+    <div class="checkout-card state-card">
+      <div class="state-icon success-icon">✓</div>
+      <h2 class="section-title">Payment Successful</h2>
+      <p class="state-sub">
+        Order <strong>{{ orderNumber() }}</strong> is confirmed and paid.
+      </p>
+      @if (paymentIntent()?.razorpayOrderId) {
+        <div class="razorpay-id" style="width:100%">
+          <span class="razorpay-label">Razorpay Ref</span>
+          <span class="razorpay-val">{{ paymentIntent()!.razorpayOrderId }}</span>
+        </div>
+      }
+      <button class="btn-primary" (click)="goToOrders()">View My Orders</button>
+    </div>
+  }
+
+  <!-- ── Step 3b: Failed ────────────────────────────────────────────── -->
+  @if (step() === 'failed') {
+    <div class="checkout-card state-card">
+      <div class="state-icon fail-icon">✕</div>
+      <h2 class="section-title">Payment Failed</h2>
+      <p class="state-sub">
+        Your payment could not be processed. Your order is saved — retry from My Orders.
+      </p>
+      <button class="btn-primary" (click)="goToOrders()">My Orders</button>
+      <a routerLink="/cart" class="continue-link">Back to Cart</a>
+    </div>
+  }
+
+</div>

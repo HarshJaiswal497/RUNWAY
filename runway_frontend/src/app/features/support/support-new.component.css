@@ -1,0 +1,251 @@
+/* ── PAGE ──────────────────────────────────────────────────────────────────── */
+.new-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* Card wrapper — gives the form a contained, elevated appearance */
+.new-wrap {
+  background: rgba(255,255,255,0.015);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-top: 2px solid rgba(201,168,76,0.3);
+  padding: 40px 48px 48px;
+}
+
+/* ── BACK LINK ─────────────────────────────────────────────────────────────── */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s;
+  margin-bottom: 40px;
+}
+.back-link:hover { color: #C9A84C; }
+
+/* ── HEADER ────────────────────────────────────────────────────────────────── */
+.new-header {
+  margin-bottom: 40px;
+}
+
+.new-eyebrow {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin-bottom: 10px;
+}
+
+.new-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: #F4F2EC;
+  margin: 0 0 10px;
+}
+
+.new-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #666;
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* ── FORM ERROR ────────────────────────────────────────────────────────────── */
+.form-error {
+  padding: 14px 18px;
+  border: 1px solid rgba(201, 76, 76, 0.35);
+  color: #c94c4c;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  margin-bottom: 28px;
+}
+
+/* ── FORM ──────────────────────────────────────────────────────────────────── */
+.new-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.req { color: #C9A84C; }
+
+.field-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #2a2a2a;
+  color: #F4F2EC;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: 0;
+}
+.field-input:focus { border-color: rgba(201, 168, 76, 0.5); }
+.field-input::placeholder { color: #3a3a3a; }
+
+.field-hint {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: #444;
+}
+
+/* ── PRIORITY GRID ─────────────────────────────────────────────────────────── */
+.priority-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.priority-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 14px 16px;
+  border: 1px solid #222;
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+
+.priority-card:hover {
+  border-color: rgba(201, 168, 76, 0.3);
+  background: rgba(201, 168, 76, 0.02);
+}
+
+/* Default selected state kept as fallback */
+.priority-card.selected {
+  border-color: rgba(201, 168, 76, 0.55);
+  background: rgba(201, 168, 76, 0.04);
+}
+
+/* Per-priority selected colours — teaches the colour language upfront */
+.priority-card.pcard-low.selected {
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.02);
+}
+.priority-card.pcard-medium.selected {
+  border-color: rgba(96,165,250,0.45);
+  background: rgba(96,165,250,0.04);
+}
+.priority-card.pcard-high.selected {
+  border-color: rgba(251,146,60,0.5);
+  background: rgba(251,146,60,0.04);
+}
+.priority-card.pcard-critical.selected {
+  border-color: rgba(239,68,68,0.5);
+  background: rgba(239,68,68,0.04);
+}
+
+.priority-radio { display: none; }
+
+.priority-card-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #AAAAAA;
+  transition: color 0.2s;
+}
+.priority-card.selected .priority-card-label            { color: #C9A84C; }
+.priority-card.pcard-low.selected .priority-card-label      { color: #AAAAAA; }
+.priority-card.pcard-medium.selected .priority-card-label   { color: #60a5fa; }
+.priority-card.pcard-high.selected .priority-card-label     { color: #fb923c; }
+.priority-card.pcard-critical.selected .priority-card-label { color: #ef4444; }
+
+.priority-card-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.03em;
+  color: #444;
+  line-height: 1.5;
+}
+
+/* ── ACTIONS ───────────────────────────────────────────────────────────────── */
+.form-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: #C9A84C;
+  border: 1px solid #C9A84C;
+  color: #080808;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+  font-weight: 600;
+}
+.btn-submit:hover    { background: #b8973f; border-color: #b8973f; }
+.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-cancel {
+  padding: 14px 24px;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #666;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-cancel:hover { border-color: #555; color: #AAAAAA; }
+
+/* ── SPINNER ───────────────────────────────────────────────────────────────── */
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid rgba(8, 8, 8, 0.3);
+  border-top-color: #080808;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── RESPONSIVE ────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .new-page        { padding: 24px 16px 60px; }
+  .new-wrap        { padding: 28px 24px 36px; }
+  .priority-grid   { grid-template-columns: 1fr 1fr; }
+  .form-actions    { flex-direction: column; align-items: stretch; }
+  .btn-submit,
+  .btn-cancel      { text-align: center; justify-content: center; }
+}

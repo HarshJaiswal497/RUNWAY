@@ -1,0 +1,93 @@
+<div class="tracking-page">
+
+  <a [routerLink]="['/orders', orderId()]" class="back-link">← Order Details</a>
+
+  <h1 class="page-title">Shipment Tracking</h1>
+
+  @if (loading()) {
+    <div class="skeleton-block skeleton-pulse"></div>
+  }
+
+  @if (!loading() && error()) {
+    <div class="state-message">
+      <span class="state-icon">◻</span>
+      <p>{{ error() }}</p>
+      <a [routerLink]="['/orders', orderId()]" class="btn-ghost">Back to Order</a>
+    </div>
+  }
+
+  @if (!loading() && shipment()) {
+
+    <!-- RETURNED — terminal exception state -->
+    @if (isReturned()) {
+      <div class="failed-banner">
+        <span>↩</span> This shipment has been returned to the warehouse. Please contact support.
+      </div>
+    }
+
+    <!-- Tracking metadata -->
+    <div class="tracking-meta">
+      <div class="meta-row">
+        <span class="meta-key">Status</span>
+        <span class="meta-val">{{ stepLabel(shipment()!.status) }}</span>
+      </div>
+      @if (shipment()!.carrier) {
+        <div class="meta-row">
+          <span class="meta-key">Carrier</span>
+          <span class="meta-val">{{ shipment()!.carrier }}</span>
+        </div>
+      }
+      @if (shipment()!.trackingNumber) {
+        <div class="meta-row">
+          <span class="meta-key">Tracking number</span>
+          <span class="meta-val tracking-num">{{ shipment()!.trackingNumber }}</span>
+        </div>
+      }
+      <div class="meta-row">
+        <span class="meta-key">Shipping to</span>
+        <span class="meta-val">{{ shipment()!.shippingAddress }}</span>
+      </div>
+      <!-- shippedAt is set by backend when status becomes DISPATCHED -->
+      @if (shipment()!.shippedAt) {
+        <div class="meta-row">
+          <span class="meta-key">Shipped at</span>
+          <span class="meta-val">{{ shipment()!.shippedAt | date:'medium' }}</span>
+        </div>
+      }
+      <!-- deliveredAt is set by backend when status becomes DELIVERED -->
+      @if (shipment()!.deliveredAt) {
+        <div class="meta-row">
+          <span class="meta-key">Delivered at</span>
+          <span class="meta-val">{{ shipment()!.deliveredAt | date:'medium' }}</span>
+        </div>
+      }
+      <div class="meta-row">
+        <span class="meta-key">Last updated</span>
+        <span class="meta-val">{{ shipment()!.updatedAt | date:'medium' }}</span>
+      </div>
+    </div>
+
+    <!-- Progress stepper (only for non-RETURNED shipments) -->
+    @if (!isReturned()) {
+      <div class="stepper">
+        @for (step of steps; track step; let i = $index) {
+          <div class="stepper-step" [class.done]="stepDone(i)" [class.active]="stepActive(i)">
+            <div class="step-node">
+              @if (stepDone(i) && !stepActive(i)) {
+                <span class="node-check">✓</span>
+              } @else {
+                <span class="node-dot"></span>
+              }
+            </div>
+            <span class="step-label">{{ stepLabel(step) }}</span>
+          </div>
+          @if (i < steps.length - 1) {
+            <div class="step-connector" [class.done]="stepDone(i + 1)"></div>
+          }
+        }
+      </div>
+    }
+
+  }
+
+</div>
